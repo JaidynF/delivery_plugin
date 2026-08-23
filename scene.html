@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>UPSCALD — One Call (Demo Scene)</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg-2: #10151f;
+    --accent: #00d9a3;
+    --accent-2: #4fb6ff;
+    --ink: #f4f7fa;
+    --ink-dim: #9aa7b5;
+    --card: #161d29;
+    --card-border: #263143;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #000;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* ---------------------------------------------------------------
+   * STAGE
+   * The renderer's browser viewport is exactly 1080x1920, so the
+   * stage renders 1:1 with no scaling during capture. In a normal
+   * browser (live preview), it's scaled down to fit the window.
+   * ------------------------------------------------------------- */
+  #stage {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px; height: 1920px;
+    transform-origin: top left;
+    background: radial-gradient(120% 90% at 50% 15%, var(--bg-2) 0%, var(--bg) 55%, #060809 100%);
+    overflow: hidden;
+  }
+
+  #grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+  }
+
+  #glow {
+    position: absolute;
+    width: 1400px; height: 1400px;
+    left: 50%; top: 40%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(0,217,163,0.16) 0%, rgba(0,217,163,0) 60%);
+  }
+
+  /* ---------------- camera layer (push/pull scaling) -------------- */
+  #cameraLayer {
+    position: absolute; inset: 0;
+    transform-origin: 50% 42%;
+  }
+
+  /* ---------------------- logo lockup ------------------------------ */
+  #logoLayer {
+    position: absolute;
+    left: 50%; top: 46%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 900px;
+  }
+  #logoMark {
+    width: 140px; height: 140px;
+    margin: 0 auto 28px;
+    border-radius: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 30px 80px rgba(0,217,163,0.35);
+  }
+  #logoMark svg { width: 74px; height: 74px; }
+  #logoWordmark {
+    font-size: 88px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    color: var(--ink);
+  }
+  #logoTagline {
+    margin-top: 22px;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    letter-spacing: 1px;
+  }
+  #endCTA {
+    margin-top: 60px;
+    display: inline-block;
+    padding: 22px 48px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #04140f;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* ------------------------- phone mock ---------------------------- */
+  #phoneLayer {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 620px; height: 1280px;
+    transform: translate(-50%, -50%);
+  }
+  #phoneFrame {
+    position: absolute; inset: 0;
+    border-radius: 64px;
+    background: #05070a;
+    border: 3px solid #232c3a;
+    box-shadow: 0 60px 140px rgba(0,0,0,0.55), 0 0 0 10px rgba(255,255,255,0.02) inset;
+    overflow: hidden;
+  }
+  #notch {
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 220px; height: 34px;
+    background: #05070a;
+    border-radius: 0 0 20px 20px;
+    z-index: 20;
+  }
+  #screen {
+    position: absolute;
+    top: 14px; left: 14px; right: 14px; bottom: 14px;
+    border-radius: 52px;
+    background: linear-gradient(180deg, #0d1420 0%, #0a1018 100%);
+    overflow: hidden;
+  }
+  #statusBar {
+    position: absolute; top: 0; left: 0; right: 0; height: 90px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding: 0 44px 14px;
+    color: var(--ink);
+    font-size: 26px;
+    font-weight: 600;
+    z-index: 10;
+  }
+  #homeLabel {
+    position: absolute;
+    top: 130px; left: 44px; right: 44px;
+    color: var(--ink);
+    font-size: 40px;
+    font-weight: 700;
+  }
+  #homeSub {
+    position: absolute;
+    top: 184px; left: 44px; right: 44px;
+    color: var(--ink-dim);
+    font-size: 24px;
+  }
+  #mapArea {
+    position: absolute;
+    top: 250px; left: 24px; right: 24px; bottom: 24px;
+    border-radius: 36px;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(79,182,255,0.18), transparent 55%),
+      radial-gradient(circle at 70% 70%, rgba(0,217,163,0.15), transparent 55%),
+      #101826;
+  }
+  #mapPin {
+    position: absolute; left: 50%; top: 46%;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 10px rgba(0,217,163,0.18);
+    transform: translate(-50%, -50%);
+  }
+
+  /* ---------------------- notification banner ---------------------- */
+  #notifBanner {
+    position: absolute;
+    top: 90px; left: 24px; right: 24px;
+    padding: 22px 26px;
+    border-radius: 28px;
+    background: rgba(22,29,41,0.92);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(6px);
+    display: flex; gap: 18px; align-items: center;
+    z-index: 15;
+  }
+  #notifIcon {
+    width: 56px; height: 56px; border-radius: 16px; flex: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+  }
+  #notifIcon svg { width: 30px; height: 30px; }
+  #notifTitle { color: var(--ink); font-size: 26px; font-weight: 700; }
+  #notifSub { color: var(--ink-dim); font-size: 22px; margin-top: 4px; }
+
+  /* -------------------------- chat thread ---------------------------- */
+  #chatThread {
+    position: absolute;
+    top: 130px; left: 24px; right: 24px; bottom: 24px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    gap: 18px;
+    padding: 0 6px 20px;
+  }
+  .bubble {
+    max-width: 78%;
+    padding: 20px 26px;
+    border-radius: 26px;
+    font-size: 25px;
+    line-height: 1.35;
+  }
+  .bubble.them {
+    align-self: flex-start;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    color: var(--ink);
+    border-bottom-left-radius: 8px;
+  }
+  .bubble.me {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #04140f;
+    font-weight: 600;
+    border-bottom-right-radius: 8px;
+  }
+
+  /* -------------------------- booking card ---------------------------- */
+  #bookingCard {
+    position: absolute;
+    left: 24px; right: 24px; bottom: 40px;
+    padding: 34px 32px;
+    border-radius: 36px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  }
+  #bookingCard .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  #bookingCard .label { color: var(--ink-dim); font-size: 22px; }
+  #bookingCard .value { color: var(--ink); font-size: 26px; font-weight: 700; }
+  #bookingCard .divider { height: 1px; background: var(--card-border); margin: 20px 0; }
+  #bookingCard .price { color: var(--accent); font-size: 44px; font-weight: 800; }
+  #acceptBtn {
+    margin-top: 26px;
+    width: 100%;
+    text-align: center;
+    padding: 24px 0;
+    border-radius: 22px;
+    background: var(--accent);
+    color: #04140f;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  /* ------------------------- status timeline ---------------------------- */
+  #statusTimeline {
+    position: absolute;
+    left: 24px; right: 24px; top: 260px;
+    padding: 34px 32px;
+    border-radius: 36px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+  }
+  #statusTimeline .step {
+    display: flex; align-items: center; gap: 22px;
+    padding: 16px 0;
+  }
+  #statusTimeline .dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #263143;
+    flex: none;
+  }
+  #statusTimeline .dot.done { background: var(--accent); }
+  #statusTimeline .txt { font-size: 27px; color: var(--ink-dim); font-weight: 600; }
+  #statusTimeline .txt.done { color: var(--ink); }
+
+  /* -------------------------- review ---------------------------------- */
+  #reviewCard {
+    position: absolute;
+    left: 24px; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    padding: 46px 38px;
+    border-radius: 40px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    text-align: center;
+  }
+  #reviewStars { font-size: 54px; letter-spacing: 10px; color: #2a3446; margin-bottom: 22px; }
+  #reviewStars span.filled { color: #ffc94a; }
+  #reviewText { color: var(--ink); font-size: 28px; line-height: 1.45; font-style: italic; }
+  #reviewName { margin-top: 22px; color: var(--ink-dim); font-size: 24px; font-weight: 600; }
+
+  .layer { position: absolute; inset: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="grid"></div>
+  <div id="glow"></div>
+
+  <div id="cameraLayer">
+
+    <!-- ============ Shots 1-3 [0-4500]: logo intro ============ -->
+    <div id="logoLayer">
+      <div id="logoMark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 12L10.5 16.5L18 7.5" stroke="#04140f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div id="logoWordmark">UPSCALD</div>
+      <div id="logoTagline">One call. Delivered.</div>
+      <div id="endCTA" style="display:none;">Get UPSCALD</div>
+    </div>
+
+    <!-- ============ Shots 4-9 [4500-15500]: phone ============ -->
+    <div id="phoneLayer">
+      <div id="phoneFrame">
+        <div id="notch"></div>
+        <div id="screen">
+
+          <div id="statusBar">
+            <span>9:41</span>
+            <span>●●●●  📶  🔋</span>
+          </div>
+
+          <!-- home screen -->
+          <div id="homeScreen" class="layer">
+            <div id="homeLabel">Good evening</div>
+            <div id="homeSub">3 jobs available nearby</div>
+            <div id="mapArea"><div id="mapPin"></div></div>
+          </div>
+
+          <!-- notification -->
+          <div id="notifBanner">
+            <div id="notifIcon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5l10-5l-10-5z" stroke="#04140f" stroke-width="1.6" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div id="notifTitle">New job nearby</div>
+              <div id="notifSub">2.1 mi · Riverside Ave</div>
+            </div>
+          </div>
+
+          <!-- chat thread -->
+          <div id="chatThread">
+            <div class="bubble them">Hey! Are you free to pick this up tonight?</div>
+            <div class="bubble me">On it — 10 minutes out.</div>
+            <div class="bubble them">Perfect, thank you 🙏</div>
+          </div>
+
+          <!-- booking card -->
+          <div id="bookingCard">
+            <div class="row"><span class="label">Pickup</span><span class="value">Riverside Ave</span></div>
+            <div class="row"><span class="label">Drop-off</span><span class="value">Elm Street</span></div>
+            <div class="divider"></div>
+            <div class="row"><span class="label">Payout</span><span class="price">$24.50</span></div>
+            <div id="acceptBtn">Accept job</div>
+          </div>
+
+          <!-- status timeline -->
+          <div id="statusTimeline">
+            <div class="step"><div class="dot done"></div><div class="txt done">Accepted</div></div>
+            <div class="step"><div class="dot" id="dotEnRoute"></div><div class="txt" id="txtEnRoute">En route</div></div>
+            <div class="step"><div class="dot" id="dotDelivered"></div><div class="txt" id="txtDelivered">Delivered</div></div>
+          </div>
+
+          <!-- review -->
+          <div id="reviewCard">
+            <div id="reviewStars">
+              <span id="star1">★</span><span id="star2">★</span><span id="star3">★</span><span id="star4">★</span><span id="star5">★</span>
+            </div>
+            <div id="reviewText">"Fastest delivery I've had all month. One tap and it was handled."</div>
+            <div id="reviewName">— Maria T.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var DURATION_MS = 20000;
+
+  var stage = document.getElementById('stage');
+  var cameraLayer = document.getElementById('cameraLayer');
+
+  var logoLayer = document.getElementById('logoLayer');
+  var logoMark = document.getElementById('logoMark');
+  var logoWordmark = document.getElementById('logoWordmark');
+  var logoTagline = document.getElementById('logoTagline');
+  var endCTA = document.getElementById('endCTA');
+
+  var phoneLayer = document.getElementById('phoneLayer');
+  var homeScreen = document.getElementById('homeScreen');
+  var notifBanner = document.getElementById('notifBanner');
+  var chatThread = document.getElementById('chatThread');
+  var bubbles = chatThread.querySelectorAll('.bubble');
+  var bookingCard = document.getElementById('bookingCard');
+  var statusTimeline = document.getElementById('statusTimeline');
+  var dotEnRoute = document.getElementById('dotEnRoute');
+  var txtEnRoute = document.getElementById('txtEnRoute');
+  var dotDelivered = document.getElementById('dotDelivered');
+  var txtDelivered = document.getElementById('txtDelivered');
+  var reviewCard = document.getElementById('reviewCard');
+  var stars = [1, 2, 3, 4, 5].map(function (n) { return document.getElementById('star' + n); });
+
+  // ---------------------------------------------------------------
+  // easing / interpolation helpers
+  // ---------------------------------------------------------------
+  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  function progress(t, start, end) { return clamp01((t - start) / (end - start)); }
+  function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
+  function easeInOutCubic(p) { return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
+  function lerp(a, b, p) { return a + (b - a) * p; }
+
+  // Generic show/hold/hide window: fades in over [inStart,inEnd],
+  // holds at full opacity, fades out over [outStart,outEnd].
+  function fadeWindow(t, inStart, inEnd, outStart, outEnd) {
+    if (t <= inStart) return 0;
+    if (t < inEnd) return easeOutCubic(progress(t, inStart, inEnd));
+    if (t <= outStart) return 1;
+    if (t < outEnd) return 1 - easeInOutCubic(progress(t, outStart, outEnd));
+    return 0;
+  }
+
+  function setOpacity(el, v) { el.style.opacity = String(v); }
+
+  // ---------------------------------------------------------------
+  // The single source of truth: given any millisecond timestamp,
+  // compute and apply the exact visual state of the whole scene.
+  // Called by render.js once per frame, and by the self-preview
+  // loop below for interactive viewing.
+  // ---------------------------------------------------------------
+  window.__setTime = function (tRaw) {
+    var t = clamp01(tRaw / DURATION_MS) * DURATION_MS;
+
+    // ---------- Shot 1 [0-1200]: hold on black ----------
+    // ---------- Shot 2 [1200-3000]: logo mark + wordmark scale/fade in ----------
+    // ---------- Shot 3 [3000-4500]: logo hold + tagline ----------
+    var logoOpacity = fadeWindow(t, 1200, 2400, 3900, 4500);
+    var logoScale = lerp(0.85, 1, easeOutCubic(progress(t, 1200, 2400)));
+    setOpacity(logoLayer, logoOpacity);
+    logoLayer.style.transform = 'translate(-50%, -50%) scale(' + logoScale + ')';
+    setOpacity(logoTagline, fadeWindow(t, 2400, 3200, 3900, 4500));
+    endCTA.style.display = 'none';
+
+    // ---------- Shot 4 [4500-6000]: phone + home screen appear ----------
+    var phoneIn = progress(t, 4500, 5600);
+    var phoneOpacity = fadeWindow(t, 4500, 5600, 14800, 15500);
+    setOpacity(phoneLayer, phoneOpacity);
+    var phoneScale = lerp(0.92, 1, easeOutCubic(phoneIn));
+    phoneLayer.style.transform = 'translate(-50%, -50%) scale(' + phoneScale + ')';
+    setOpacity(homeScreen, fadeWindow(t, 4500, 5600, 6800, 7200));
+
+    // ---------- Shot 5 [6000-7500]: notification banner slides in ----------
+    var notifP = progress(t, 6000, 6600);
+    setOpacity(notifBanner, fadeWindow(t, 6000, 6600, 7500, 8000));
+    notifBanner.style.transform = 'translateY(' + lerp(-40, 0, easeOutCubic(notifP)) + 'px)';
+
+    // ---------- Shot 6 [7500-9000]: message thread builds in ----------
+    var bubbleWindows = [
+      [7500, 8000],
+      [8100, 8600],
+      [8700, 9000],
+    ];
+    for (var i = 0; i < bubbles.length; i++) {
+      var w = bubbleWindows[i];
+      var op = fadeWindow(t, w[0], w[1], 8900, 9450);
+      setOpacity(bubbles[i], op);
+      bubbles[i].style.transform = 'translateY(' + lerp(16, 0, easeOutCubic(progress(t, w[0], w[1]))) + 'px)';
+    }
+
+    // ---------- Shot 7 [9000-11000]: booking card ----------
+    var cardP = progress(t, 9000, 9700);
+    setOpacity(bookingCard, fadeWindow(t, 9000, 9700, 10700, 11100));
+    bookingCard.style.transform = 'translateY(' + lerp(50, 0, easeOutCubic(cardP)) + 'px)';
+
+    // ---------- Shot 8 [11000-13000]: accepted -> status timeline ----------
+    setOpacity(statusTimeline, fadeWindow(t, 11000, 11600, 12900, 13300));
+    var enRouteOn = t >= 11900;
+    var deliveredOn = t >= 12500;
+    dotEnRoute.classList.toggle('done', enRouteOn);
+    txtEnRoute.classList.toggle('done', enRouteOn);
+    dotDelivered.classList.toggle('done', deliveredOn);
+    txtDelivered.classList.toggle('done', deliveredOn);
+
+    // ---------- Shot 9 [13000-15000]: review stars ----------
+    setOpacity(reviewCard, fadeWindow(t, 13000, 13600, 14700, 15200));
+    var starTimes = [13600, 13850, 14100, 14350, 14600];
+    for (var s = 0; s < stars.length; s++) {
+      stars[s].classList.toggle('filled', t >= starTimes[s]);
+    }
+
+    // ---------- Shot 10 [15500-18500]: camera push/pull reveal ----------
+    var pullP = easeInOutCubic(progress(t, 15500, 18000));
+    var camScale = lerp(1.12, 1, pullP);
+    cameraLayer.style.transform = 'scale(' + camScale + ')';
+    var logoReturnOpacity = fadeWindow(t, 16500, 17300, 20000, 20001);
+    if (t >= 15600) {
+      setOpacity(logoLayer, Math.max(logoOpacity, logoReturnOpacity));
+      logoLayer.style.transform = 'translate(-50%, -50%) scale(1)';
+      setOpacity(logoTagline, logoReturnOpacity);
+    }
+
+    // ---------- Shot 11 [18500-20000]: end card ----------
+    var endP = fadeWindow(t, 18500, 19100, 20000, 20001);
+    if (t >= 18400) {
+      setOpacity(phoneLayer, 0);
+      setOpacity(logoLayer, 1);
+      logoLayer.style.transform = 'translate(-50%, -50%) scale(1)';
+      setOpacity(logoWordmark, 1);
+      setOpacity(logoTagline, 1);
+      endCTA.style.display = 'inline-block';
+      setOpacity(endCTA, endP);
+      endCTA.style.transform = 'translateY(' + lerp(20, 0, easeOutCubic(progress(t, 18500, 19300))) + 'px)';
+    }
+  };
+
+  // ---------------------------------------------------------------
+  // Live-preview self-play loop. Skipped entirely in render mode —
+  // render.js drives __setTime directly and never wants a rAF loop
+  // racing against its own frame-by-frame calls.
+  // ---------------------------------------------------------------
+  if (!window.__RENDER_MODE) {
+    var start = null;
+    function tick(now) {
+      if (start === null) start = now;
+      var elapsed = (now - start) % DURATION_MS;
+      window.__setTime(elapsed);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // Scale the stage to fit the live browser window for preview only.
+    function fitStage() {
+      var s = Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+      stage.style.transform = 'scale(' + s + ')';
+      document.body.style.width = (1080 * s) + 'px';
+      document.body.style.height = (1920 * s) + 'px';
+    }
+    window.addEventListener('resize', fitStage);
+    fitStage();
+  } else {
+    window.__setTime(0);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "upscald-demo-render",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Renders the UPSCALD 'One Call' demo video from scene.html to a real MP4 via headless Chromium + ffmpeg.",
+  "scripts": {
+    "postinstall": "playwright install chromium",
+    "render": "node render.js"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0"
+  }
+}
