@@ -1,8 +1,8 @@
 {
-  "name": "upscald-demo-render",
+  "name": "upscald-demo-video",
   "version": "1.0.0",
+  "description": "Renders the UPSCALD Marketing 20-second demo video to a real MP4 file, frame-accurate, no third-party video generation service required.",
   "private": true,
-  "description": "Renders the UPSCALD 'One Call' demo video from scene.html to a real MP4 via headless Chromium + ffmpeg.",
   "scripts": {
     "postinstall": "playwright install chromium",
     "render": "node render.js"

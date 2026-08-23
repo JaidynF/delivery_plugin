@@ -4,11 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A local render pipeline for the UPSCALD "One Call" demo video: a 20-second,
-9:16 (1080×1920) product demo rendered to a real MP4 without any paid
-video-generation service. A headless browser plays an HTML/CSS/JS scene
+A local render pipeline for the UPSCALD Marketing "One Call" demo video: a
+20-second, 9:16 (1080×1920) product demo rendered to a real MP4 without any
+paid video-generation service. A headless browser plays an HTML/CSS/JS scene
 frame-by-frame, screenshots each frame at an exact timestamp, and ffmpeg
 encodes the sequence.
+
+The demo pitches UPSCALD's lead-response/booking automation to local service
+businesses: a missed-call caption, a lock screen, a "New Lead" notification,
+an SMS thread that books an electrician appointment, a confirmation card,
+three rapid automated status notifications (reminder → en route → complete),
+a 5-star review, and a closing logo lockup.
 
 ## Commands
 
@@ -36,24 +42,44 @@ truth for every visual; `render.js` only drives it and never contains
 visual/timing logic itself.
 
 - **`scene.html`** — the entire video as a deterministic timeline. All DOM
-  and CSS is static; a single global function, `window.__setTime(ms)`,
-  is the only thing that changes anything — given any millisecond
-  timestamp in `[0, DURATION_MS]`, it sets every element's opacity/transform
-  directly (no CSS transitions, since transitions aren't seekable to an
-  exact frame). This is what makes the render frame-accurate: the renderer
-  never has to "catch" a moving animation, it just asks for a specific
-  instant.
+  and CSS is static (built once, either in markup or via the `buildNotif()` /
+  template-literal `innerHTML` calls near the top of the `<script>`); a
+  single global function, `window.__setTime(ms)`, is the only thing that
+  changes anything — given any millisecond timestamp in `[0, DURATION_MS]`,
+  it sets every element's opacity/transform directly (no CSS transitions,
+  since transitions aren't seekable to an exact frame). This is what makes
+  the render frame-accurate: the renderer never has to "catch" a moving
+  animation, it just asks for a specific instant.
   - The timeline is organized as consecutive commented "Shot" blocks
     (`// ---------- Shot N [startMs-endMs]: description ----------`)
-    inside `__setTime`. To retime or re-order a beat, find its shot
-    comment and adjust the ms range. To change copy, edit the static text
-    in the HTML body directly (bubbles, notification text, review) — no
-    timeline changes needed for that.
-  - `fadeWindow(t, inStart, inEnd, outStart, outEnd)` is the shared
-    fade-in/hold/fade-out helper nearly every element uses; adjacent shots
-    that share the same screen region (e.g. message thread → booking card)
-    must have their fade-out/fade-in windows tuned so one is gone before
-    the next is fully in, or they visually overlap.
+    inside `setTime()`. To retime or re-order a beat, find its shot comment
+    and adjust the ms range. To change copy, edit the template-literal
+    strings near the top of the script (bubbles, notification text, booking
+    card, review) — no timeline changes needed for that. Shots are not
+    strictly sequential/non-overlapping: the "dolly zoom" (see below) and
+    the `#veil` crossfade both span multiple nominal shot boundaries.
+  - `prog(v, start, end)` gives clamped 0–1 progress through a range;
+    `setNotifState()`, `setBubbleState()`, and `setCaption()` are the shared
+    arrive/hold/leave helpers most elements use. Adjacent shots that share
+    the same screen region (e.g. message thread → booking card) must have
+    their leave/arrive windows tuned so one is gone before the next is
+    fully in, or they visually overlap.
+  - Notifications are built once via `buildNotif(id, app, title, msg)` and
+    reused for both the single "New Lead" notif (shot 5) and the three
+    rapid-fire status notifs (shot 8) — they all sit at the same
+    `.notif` position (`top:350px`) and are shown one at a time via
+    `setNotifState`, not stacked.
+  - The camera move is a single continuous scale on `#phone-wrap`
+    (a "dolly-in") that ramps from t=3000 to t=13000, holds through
+    t=15000, then reverses to a pulled-back scale by t=16000 — it is not
+    a per-shot push/pull, it spans nearly the whole phone sequence.
+  - `#veil` is a full-stage black div used for hard cuts/crossfades
+    (e.g. the transition out of the phone sequence around t=16000);
+    it's a separate mechanism from any single element's opacity.
+  - `#caption` is one reused full-screen text element — `setCaption()`
+    overwrites its text content for each caption beat (the opening "A
+    missed call is a lost customer." and the later "Nothing goes cold.")
+    rather than each caption having its own DOM node.
   - `window.__RENDER_MODE`, set via `page.addInitScript` before the page
     loads, tells the scene to skip its own `requestAnimationFrame`
     self-preview loop — render.js drives `__setTime` directly instead and
