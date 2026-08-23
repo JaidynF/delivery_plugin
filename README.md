@@ -1,6 +1,6 @@
 # UPSCALD Demo Video — Render Project
 
-Renders the 20-second "One Call" demo video to a real MP4 file — no
+Renders the 30-second "One Call" demo video to a real MP4 file — no
 HyperFrames, Higgsfield, or paid video-generation service required.
 This runs the whole pipeline locally: a headless browser plays the
 scene frame-by-frame, screenshots each frame, and ffmpeg encodes the
@@ -9,10 +9,11 @@ sequence into video.
 ## What's in this folder
 
 - `scene.html` — the actual animated video, built as a deterministic
-  timeline. Every visual moment (logo, phone, notifications, message
-  thread, booking card, review stars, camera push/pull) is driven by
-  a single function, `window.__setTime(ms)`, that sets the whole
-  scene to look exactly as it should at any millisecond. This is
+  timeline. Every visual moment (logo, the two phones — customer and
+  Mike's Electric — notifications, message thread, booking card,
+  notification pill flurry, review stars, camera dolly/pull-back) is
+  driven by a single function, `window.__setTime(ms)`, that sets the
+  whole scene to look exactly as it should at any millisecond. This is
   what makes the render frame-accurate — the renderer doesn't have
   to "hope" it captured the right moment, it can ask for any exact
   timestamp directly.
@@ -60,7 +61,7 @@ npm run render
 This will:
 1. Launch a headless browser at 1080×1920 (9:16, ready for
    Instagram/TikTok/Reels or a vertical sales demo)
-2. Step through the full 20 seconds at 30fps (600 frames total),
+2. Step through the full 30 seconds at 30fps (900 frames total),
    capturing a PNG screenshot of the exact visual state at each frame
 3. Encode those 600 PNGs into `output/upscald-demo-silent.mp4` with
    ffmpeg (high quality, CRF 16, slow preset — this is intentionally
@@ -86,7 +87,7 @@ assets/music.mp3
 
 Then re-run `npm run render`. The script automatically detects the
 file and muxes it in — no code changes needed. If the file's longer
-than 20 seconds, ffmpeg trims it to match the video length
+than 30 seconds, ffmpeg trims it to match the video length
 automatically (`-shortest` flag). If you don't have music yet, the
 video still renders fine without it — you'll just get a silent MP4
 you can add sound to later in any editor.
@@ -105,7 +106,7 @@ original script is commented and mapped to its exact millisecond
 range, e.g.:
 
 ```js
-// ---------- Shot 7 [9000-11000]: booking card ----------
+// ---------- Shot 10 [18000-21000]: booking bottom sheet ----------
 ```
 
 To change timing, find the relevant shot's comment block and adjust

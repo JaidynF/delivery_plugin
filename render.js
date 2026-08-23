@@ -27,7 +27,7 @@ const { execSync, spawnSync } = require('child_process');
 const { chromium } = require('playwright');
 
 const FPS = 30;
-const DURATION_MS = 20000;
+const DURATION_MS = 30000;
 const TOTAL_FRAMES = Math.round((DURATION_MS / 1000) * FPS);
 const WIDTH = 1080;
 const HEIGHT = 1920;

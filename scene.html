@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>UPSCALD — One Call (render source)</title>
+<title>UPSCALD MARKETING — One Call (render source)</title>
 <style>
   :root{
-    /* Brand grayscale — UpScald Marketing identity board */
-    --black:#0B0B0D;
-    --gray-dark:#1D1D1F;
-    --gray:#686B70;
-    --gray-light:#F5F5F7;
+    /* GLOBAL STYLE LOCK — pure black stage, no exceptions */
+    --black:#000000;
     --white:#FFFFFF;
-    /* Brand accent gradient: orange -> purple -> cyan */
+    --gray:#8A8A8F;
+    /* brand accent gradient: orange -> purple -> cyan */
     --orange:#FF8A00;
     --orange-red:#FF4500;
     --purple:#7B3FF2;
     --cyan:#00C2FF;
     --blue:#2244FF;
-    /* Brand typography: SF Pro Display for headlines, SF Pro Text for body/support copy */
+    /* spec-specific system colors */
+    --red-miss:#FF3B30;
+    --link-blue:#0A84FF;
+    --imessage-green:#34C759;
+    /* type: SF Pro Display for headlines, SF Pro Text for body/support copy */
     --font-display:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
     --font-text:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   }
@@ -31,58 +33,50 @@
   }
   #stage{
     position:relative; width:1080px; height:1920px; background:var(--black);
-    display:flex; align-items:center; justify-content:center;
   }
+  .abs-fill{ position:absolute; inset:0; }
 
   /* ============ LOGO ============ */
-  #logo{
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; opacity:0;
-  }
-  #logo svg{ width:150px; height:150px; margin-bottom:36px; }
-  #logo .word{ font-size:56px; font-weight:700; color:var(--white); letter-spacing:-1px; }
-  #logo .word .sub{ font-weight:300; color:var(--gray); }
-  #logo .tag{ font-size:26px; color:var(--gray); font-weight:500; margin-top:16px; font-family:var(--font-text); }
+  #logo{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  #logoMark svg{ width:150px; height:150px; display:block; }
+  #logoWordText{ text-align:center; margin-top:36px; opacity:0; }
+  #logoWordText .word{ font-size:52px; font-weight:700; color:var(--white); letter-spacing:2px; text-transform:uppercase; }
+  #logoWordText .tag{ font-size:26px; color:var(--gray); font-weight:500; margin-top:16px; font-family:var(--font-text); }
 
   /* ============ CAPTION ============ */
   #caption{
-    position:absolute; left:0; right:0; text-align:center; opacity:0;
-    padding:0 90px; top:50%; transform:translateY(-50%);
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:0 90px; opacity:0;
   }
-  #caption .l1{ font-size:58px; font-weight:700; color:var(--white); letter-spacing:-1px; line-height:1.2; }
-  #caption .l2{ font-size:30px; color:var(--gray); font-weight:500; margin-top:18px; font-family:var(--font-text); }
+  #caption .l1{ font-size:52px; font-weight:700; color:var(--white); letter-spacing:1px; line-height:1.3; }
 
-  /* ============ PHONE ============ */
-  #phone-wrap{
-    position:relative; width:620px; height:1264px; opacity:0;
-    transform:translateY(60px) scale(0.94);
+  /* ============ CAMERA RIGS ============ */
+  #rigB, #rigA{ position:absolute; inset:0; transform-origin:50% 50%; }
+  #rigB{ display:flex; align-items:center; justify-content:center; }
+
+  /* ============ PHONE HARDWARE (shared) ============ */
+  .phone-wrap{ position:relative; width:620px; height:1264px; display:flex; align-items:center; justify-content:center; }
+  .glow{
+    position:absolute; width:860px; height:860px; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(123,63,242,0.38) 0%, rgba(123,63,242,0.14) 40%, transparent 70%);
+    filter:blur(14px); opacity:0;
   }
-  #glow{
-    position:absolute; inset:-120px; border-radius:50%;
-    background:radial-gradient(circle, rgba(123,63,242,0.35) 0%, rgba(123,63,242,0.12) 40%, transparent 70%);
-    opacity:0; filter:blur(10px);
-  }
-  #phone{
+  .phone{
     position:relative; width:620px; height:1264px; border-radius:108px;
     background:linear-gradient(155deg,#3a3a3d,#1a1a1c 40%,#0a0a0b);
     padding:22px;
     box-shadow:0 0 0 2px rgba(255,255,255,0.06);
   }
-  #screen{
-    width:100%; height:100%; border-radius:88px; background:#000;
-    overflow:hidden; position:relative;
+  .screen{ width:100%; height:100%; border-radius:88px; background:#000; overflow:hidden; position:relative; }
+  .island{ position:absolute; top:26px; left:50%; transform:translateX(-50%); width:170px; height:44px; background:#000; border-radius:26px; z-index:90; }
+  .statusbar{
+    position:absolute; top:0; left:0; right:0; height:96px; z-index:80;
+    display:flex; align-items:flex-end; justify-content:space-between; padding:20px 48px 16px;
   }
-  #island{
-    position:absolute; top:26px; left:50%; transform:translateX(-50%);
-    width:170px; height:44px; background:#000; border-radius:26px; z-index:80;
-  }
-  #statusbar{
-    position:absolute; top:0; left:0; right:0; height:96px; z-index:70;
-    display:flex; align-items:flex-end; justify-content:space-between;
-    padding:20px 48px 16px;
-  }
-  #statusbar .time{ font-size:30px; font-weight:600; color:#fff; }
-  #statusbar .icons{ display:flex; align-items:center; gap:8px; }
+  .statusbar .time{ font-size:30px; font-weight:600; color:#fff; }
+  .statusbar .icons{ display:flex; align-items:center; gap:8px; }
   .sig-bars{ display:flex; align-items:flex-end; gap:3px; height:16px; }
   .sig-bars div{ width:5px; background:#fff; border-radius:1px; }
   .sig-bars div:nth-child(1){height:6px;} .sig-bars div:nth-child(2){height:9px;}
@@ -92,23 +86,40 @@
   .batt::after{ content:''; position:absolute; right:-5px; top:5px; width:3px; height:9px; background:#fff; border-radius:0 2px 2px 0; }
   .batt::before{ content:''; position:absolute; top:2px; left:2px; bottom:2px; width:80%; background:#fff; border-radius:2px; }
 
-  .layer{ position:absolute; inset:0; opacity:0; }
+  .phone-label{
+    position:absolute; left:0; right:0; top:100%; margin-top:22px; text-align:center;
+    font-size:22px; font-weight:600; color:var(--gray); letter-spacing:3px; text-transform:uppercase;
+    font-family:var(--font-text); opacity:0;
+  }
 
-  /* Lock screen */
-  #wallpaper{
+  .wallpaper{
     position:absolute; inset:0;
     background:
-      radial-gradient(circle at 30% 18%, rgba(255,138,0,0.14), transparent 42%),
-      radial-gradient(circle at 75% 70%, rgba(123,63,242,0.20), transparent 50%),
-      linear-gradient(160deg,#15101f,#08080d 60%,#000);
+      radial-gradient(circle at 30% 18%, rgba(123,63,242,0.16), transparent 45%),
+      linear-gradient(160deg,#0d0a12,#050506 60%,#000);
   }
-  #locktime{
-    position:absolute; top:230px; left:0; right:0; text-align:center; z-index:20; color:#fff;
-  }
-  #locktime .t{ font-size:158px; font-weight:200; letter-spacing:-4px; line-height:1; }
-  #locktime .d{ font-size:34px; font-weight:600; margin-top:14px; opacity:0.92; font-family:var(--font-text); }
 
-  /* Notification */
+  /* ============ OUTGOING CALL SCREEN (Phone A, shot 3-4) ============ */
+  #a-call{ position:absolute; inset:0; background:linear-gradient(160deg,#101013,#050506 65%,#000); }
+  .call-circle{
+    position:absolute; left:50%; top:400px; width:180px; height:180px; transform:translateX(-50%);
+    border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--purple),var(--cyan));
+  }
+  .ripple{
+    position:absolute; inset:0; border-radius:50%; border:3px solid rgba(255,255,255,0.55);
+  }
+  .call-name{ position:absolute; left:0; right:0; top:640px; text-align:center; color:#fff; font-size:44px; font-weight:700; }
+  .call-status{ position:absolute; left:0; right:0; top:710px; text-align:center; color:var(--gray); font-size:28px; font-family:var(--font-text); }
+  .call-status .dot{ opacity:0.3; }
+  .call-ended{ position:absolute; left:0; right:0; top:710px; text-align:center; color:var(--gray); font-size:28px; font-family:var(--font-text); }
+  .call-controls{ position:absolute; left:0; right:0; bottom:120px; display:flex; justify-content:center; gap:60px; }
+  .call-controls .ctrl{
+    width:88px; height:88px; border-radius:50%; background:rgba(255,255,255,0.10);
+    display:flex; align-items:center; justify-content:center; font-size:32px; opacity:0.55;
+  }
+  .dim-overlay{ position:absolute; inset:0; background:#000; opacity:0; }
+
+  /* ============ NOTIFICATIONS (shared) ============ */
   .notif{
     position:absolute; left:30px; right:30px; top:350px;
     background:rgba(255,255,255,0.13); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px);
@@ -116,46 +127,40 @@
     display:flex; gap:22px; align-items:flex-start;
     border:1px solid rgba(255,255,255,0.10);
     box-shadow:0 20px 50px -10px rgba(0,0,0,0.6);
-    opacity:0; transform:translateY(-50px) scale(0.9);
+    opacity:0; transform:translateY(-50px);
   }
   .notif-icon{
     width:72px; height:72px; border-radius:20px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center; font-size:34px;
+    display:flex; align-items:center; justify-content:center;
     background:linear-gradient(135deg,var(--orange),var(--purple),var(--cyan));
+  }
+  .notif-icon.miss{ background:var(--red-miss); font-size:32px; }
+  .notif-icon.msg{ background:var(--imessage-green); font-size:34px; }
+  .notif-icon .tri{
+    width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent;
+    border-bottom:19px solid #fff;
   }
   .notif-body{ flex:1; min-width:0; }
   .notif-app{ font-size:22px; font-weight:700; color:rgba(255,255,255,0.55); text-transform:uppercase; letter-spacing:1px; font-family:var(--font-text); }
   .notif-title{ font-size:32px; font-weight:700; color:#fff; margin-top:4px; }
   .notif-msg{ font-size:27px; color:rgba(255,255,255,0.85); margin-top:6px; line-height:1.35; font-family:var(--font-text); }
+  .notif-msg .link{ color:var(--link-blue); }
 
-  /* Thread */
-  #thread{
-    position:absolute; inset:0; padding:120px 34px 90px; display:flex; flex-direction:column; gap:20px;
-    justify-content:flex-end;
-  }
-  .bubble{
-    max-width:80%; padding:22px 30px; border-radius:38px; font-size:29px; line-height:1.4;
-    opacity:0; transform:translateY(20px) scale(0.95); font-family:var(--font-text);
-  }
-  .bubble.out{ align-self:flex-end; background:linear-gradient(135deg,var(--orange),var(--purple)); color:#fff; border-bottom-right-radius:12px; }
-  .bubble.in{ align-self:flex-start; background:rgba(255,255,255,0.12); color:#fff; border-bottom-left-radius:12px; }
-  .typing{
-    align-self:flex-start; background:rgba(255,255,255,0.12); border-radius:38px; border-bottom-left-radius:12px;
-    padding:20px 28px; display:flex; gap:8px; opacity:0;
-  }
-  .typing span{ width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,0.6); }
+  #b-notifs{ position:absolute; inset:0; }
+  #autoRespBanner{ top:494px; }
 
-  /* Booking card */
-  #bookcard{
-    position:absolute; left:44px; right:44px; bottom:0;
-    background:var(--gray-dark); border-radius:56px 56px 0 0; padding:56px 48px 90px;
-    border:1px solid rgba(255,255,255,0.08); border-bottom:none;
+  /* ============ BOOKING BOTTOM SHEET (Phone A, shot 10-11) ============ */
+  #a-booking{
+    position:absolute; left:0; right:0; bottom:0;
+    background:rgba(255,255,255,0.13); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px);
+    border-radius:56px 56px 0 0; padding:56px 48px 90px;
+    border:1px solid rgba(255,255,255,0.14); border-bottom:none;
     box-shadow:0 -30px 60px -20px rgba(0,0,0,0.7);
     opacity:0; transform:translateY(100%);
   }
   .bc-label{ font-size:24px; font-weight:700; background:linear-gradient(90deg,var(--orange),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent; text-transform:uppercase; letter-spacing:2px; }
   .bc-title{ font-size:44px; font-weight:700; color:#fff; margin-top:14px; }
-  .bc-sub{ font-size:28px; color:rgba(255,255,255,0.6); margin-top:10px; font-family:var(--font-text); }
+  .bc-sub{ font-size:28px; color:var(--gray); margin-top:10px; font-family:var(--font-text); }
   .bc-check{
     margin-top:38px; width:96px; height:96px; border-radius:50%;
     background:linear-gradient(135deg,var(--cyan),var(--purple));
@@ -163,68 +168,158 @@
     opacity:0; transform:scale(0.4);
   }
 
-  /* Review */
-  #reviewcard{ position:absolute; left:44px; right:44px; top:640px; text-align:center; opacity:0; transform:scale(0.9); }
-  .stars{ font-size:70px; letter-spacing:14px; }
-  .star{ opacity:0; display:inline-block; transform:scale(0) rotate(-40deg); color:var(--orange); }
-  .review-name{ color:#fff; font-size:36px; font-weight:700; margin-top:26px; }
-  .review-sub{ color:rgba(255,255,255,0.5); font-size:26px; margin-top:8px; font-style:italic; font-family:var(--font-text); }
+  /* ============ PILL FLURRY (shot 11) ============ */
+  #pillFlurry{ position:absolute; inset:0; }
+  .pill{
+    position:absolute; padding:10px 20px; border-radius:999px;
+    background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.10);
+    color:#fff; font-size:18px; font-weight:600; white-space:nowrap; font-family:var(--font-text);
+    opacity:0;
+  }
 
-  #veil{ position:absolute; inset:0; background:var(--black); opacity:0; z-index:500; }
+  /* ============ REVIEW LOCKUP (shot 12) ============ */
+  #reviewLockup{
+    position:absolute; left:60px; right:60px; top:50%; transform:translateY(-50%);
+    text-align:center; opacity:0;
+  }
+  .stars{ font-size:76px; letter-spacing:16px; }
+  .star{ display:inline-block; color:var(--orange); opacity:0; transform:scale(0); }
+  .review-name{ color:#fff; font-size:38px; font-weight:700; margin-top:30px; opacity:0; }
+  .review-sub{ color:var(--gray); font-size:28px; margin-top:12px; font-style:italic; font-family:var(--font-text); opacity:0; }
 </style>
 </head>
 <body>
 <div id="stage">
 
   <div id="logo">
-    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="lg1" x1="0%" y1="100%" x2="60%" y2="0%">
-          <stop offset="0%" stop-color="#FF4500"/><stop offset="100%" stop-color="#FF8A00"/>
-        </linearGradient>
-        <linearGradient id="lg2" x1="100%" y1="100%" x2="40%" y2="0%">
-          <stop offset="0%" stop-color="#2244FF"/><stop offset="50%" stop-color="#7B3FF2"/><stop offset="100%" stop-color="#00C2FF"/>
-        </linearGradient>
-      </defs>
-      <polygon points="4,44 24,4 28,44" fill="url(#lg1)"/>
-      <polygon points="24,4 44,44 16,44" fill="url(#lg2)" opacity="0.96"/>
-    </svg>
-    <div class="word">UPSCALD <span class="sub">MARKETING</span></div>
-    <div class="tag" id="logo-tag">Smarter systems. More customers.</div>
-  </div>
-
-  <div id="caption"><div class="l1" id="cap-l1"></div><div class="l2" id="cap-l2"></div></div>
-
-  <div id="phone-wrap">
-    <div id="glow"></div>
-    <div id="phone">
-      <div id="screen">
-        <div id="island"></div>
-        <div id="statusbar">
-          <div class="time">9:41</div>
-          <div class="icons">
-            <div class="sig-bars"><div></div><div></div><div></div><div></div></div>
-            <svg class="wifi-icon" viewBox="0 0 20 16" fill="none"><path d="M10 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#fff"/><path d="M6.5 9.5a5 5 0 017 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M3.5 6.5a9 9 0 0113 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.6"/></svg>
-            <div class="batt"></div>
-          </div>
-        </div>
-
-        <div id="wallpaper" class="layer"></div>
-        <div id="locktime" class="layer"><div class="t">9:41</div><div class="d">Tuesday, August 22</div></div>
-        <div id="notif-layer"></div>
-        <div id="thread-layer" class="layer"></div>
-        <div id="book-layer" class="layer"></div>
-        <div id="review-layer" class="layer"></div>
-      </div>
+    <div id="logoMark">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="100%" x2="60%" y2="0%">
+            <stop offset="0%" stop-color="#FF4500"/><stop offset="100%" stop-color="#FF8A00"/>
+          </linearGradient>
+          <linearGradient id="lg2" x1="100%" y1="100%" x2="40%" y2="0%">
+            <stop offset="0%" stop-color="#2244FF"/><stop offset="50%" stop-color="#7B3FF2"/><stop offset="100%" stop-color="#00C2FF"/>
+          </linearGradient>
+        </defs>
+        <polygon points="4,44 24,4 28,44" fill="url(#lg1)"/>
+        <polygon points="24,4 44,44 16,44" fill="url(#lg2)" opacity="0.96"/>
+      </svg>
+    </div>
+    <div id="logoWordText">
+      <div class="word">UPSCALD MARKETING</div>
+      <div class="tag" id="logoTag">Smarter systems. More customers.</div>
     </div>
   </div>
 
-  <div id="veil"></div>
+  <div id="caption"><div class="l1">Nothing goes cold.</div></div>
+
+  <!-- ============ PHONE B — Mike's Electric (enters from right) ============ -->
+  <div id="rigB">
+    <div class="phone-wrap" id="phoneB-wrap">
+      <div class="glow" id="glowB"></div>
+      <div class="phone" id="phoneB">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="statusbar">
+            <div class="time">9:41</div>
+            <div class="icons">
+              <div class="sig-bars"><div></div><div></div><div></div><div></div></div>
+              <svg class="wifi-icon" viewBox="0 0 20 16" fill="none"><path d="M10 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#fff"/><path d="M6.5 9.5a5 5 0 017 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M3.5 6.5a9 9 0 0113 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.6"/></svg>
+              <div class="batt"></div>
+            </div>
+          </div>
+          <div class="wallpaper"></div>
+          <div id="b-notifs">
+            <div class="notif miss" id="missCallBanner">
+              <div class="notif-icon miss">📞</div>
+              <div class="notif-body">
+                <div class="notif-title">Missed Call</div>
+                <div class="notif-msg">Unknown Caller · 2 min ago</div>
+              </div>
+            </div>
+            <div class="notif" id="autoRespBanner">
+              <div class="notif-icon"><div class="tri"></div></div>
+              <div class="notif-body">
+                <div class="notif-app">UPSCALD</div>
+                <div class="notif-title">Auto-Response Sent</div>
+                <div class="notif-msg">Text sent to customer with booking link.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label" id="labelB">Mike's Electric</div>
+    </div>
+  </div>
+
+  <!-- ============ PHONE A — Customer (enters from left) ============ -->
+  <div id="rigA">
+    <div class="phone-wrap" id="phoneA-wrap" style="position:absolute; left:50%; top:50%; margin-left:-310px; margin-top:-632px;">
+      <div class="glow" id="glowA"></div>
+      <div class="phone" id="phoneA">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="statusbar">
+            <div class="time">9:41</div>
+            <div class="icons">
+              <div class="sig-bars"><div></div><div></div><div></div><div></div></div>
+              <svg class="wifi-icon" viewBox="0 0 20 16" fill="none"><path d="M10 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="#fff"/><path d="M6.5 9.5a5 5 0 017 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M3.5 6.5a9 9 0 0113 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.6"/></svg>
+              <div class="batt"></div>
+            </div>
+          </div>
+
+          <!-- shot 3-4: outgoing call -->
+          <div id="a-call">
+            <div class="call-circle"><div class="ripple" id="callRipple"></div></div>
+            <div class="call-name">Mike's Electric</div>
+            <div class="call-status" id="callingText">calling<span class="dot" id="d1">.</span><span class="dot" id="d2">.</span><span class="dot" id="d3">.</span></div>
+            <div class="call-ended" id="endedText" style="opacity:0;">Call Ended</div>
+            <div class="call-controls">
+              <div class="ctrl">🔇</div><div class="ctrl">⌨</div><div class="ctrl">🔊</div>
+            </div>
+            <div class="dim-overlay" id="aDim"></div>
+          </div>
+
+          <!-- shot 8-11: idle lock screen base, then imessage + booking overlays -->
+          <div id="a-lock" class="wallpaper"></div>
+
+          <div class="notif" id="a-imessage" style="top:350px;">
+            <div class="notif-icon msg">💬</div>
+            <div class="notif-body">
+              <div class="notif-title">Mike's Electric</div>
+              <div class="notif-msg">Sorry we missed you! Book a time here: <span class="link">upscald.link/book</span></div>
+            </div>
+          </div>
+
+          <div id="a-booking">
+            <div class="bc-label">Appointment Confirmed</div>
+            <div class="bc-title">Thursday · 2:00 PM</div>
+            <div class="bc-sub">Electrical repair</div>
+            <div class="bc-check" id="aCheck">✓</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label" id="labelA">Customer</div>
+    </div>
+
+    <div id="pillFlurry"></div>
+
+    <div id="reviewLockup">
+      <div class="stars">
+        <span class="star" id="s1">★</span><span class="star" id="s2">★</span><span class="star" id="s3">★</span><span class="star" id="s4">★</span><span class="star" id="s5">★</span>
+      </div>
+      <div class="review-name" id="reviewName">Jordan left a 5-star review.</div>
+      <div class="review-sub" id="reviewSub">"Fastest response I've ever gotten from a contractor."</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
 /* ============================================================
-   DETERMINISTIC TIMELINE
+   DETERMINISTIC TIMELINE — 30s, two-phone structure.
    window.__setTime(ms) puts the scene into an exact visual state
    for time `ms` since the start of the video. The render script
    calls this once per output frame and screenshots the result —
@@ -233,246 +328,243 @@
    normal browser (for previewing), driven by requestAnimationFrame.
    ============================================================ */
 
-const DURATION_MS = 20000;
+const DURATION_MS = 30000;
 
-const el = {
-  logo: document.getElementById('logo'),
-  logoTag: document.getElementById('logo-tag'),
-  caption: document.getElementById('caption'),
-  capL1: document.getElementById('cap-l1'),
-  capL2: document.getElementById('cap-l2'),
-  phoneWrap: document.getElementById('phone-wrap'),
-  glow: document.getElementById('glow'),
-  wallpaper: document.getElementById('wallpaper'),
-  locktime: document.getElementById('locktime'),
-  notifLayer: document.getElementById('notif-layer'),
-  threadLayer: document.getElementById('thread-layer'),
-  bookLayer: document.getElementById('book-layer'),
-  reviewLayer: document.getElementById('review-layer'),
-  veil: document.getElementById('veil'),
-};
-
-// ---- easing helpers ----
 const clamp01 = (x)=>Math.max(0,Math.min(1,x));
 const lerp = (a,b,t)=>a+(b-a)*t;
-// progress of value v within [start,end], clamped 0..1
 const prog = (v,start,end)=> end===start ? (v>=end?1:0) : clamp01((v-start)/(end-start));
-const easeOutBack = (t)=>{ const c1=1.70158, c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); };
-const easeOutCubic = (t)=>1-Math.pow(1-t,3);
-const easeInOutCubic = (t)=> t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+const easeOutBack = (t)=>{ const c1=1.70158, c3=c1+1; t=clamp01(t); return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); };
+const easeOutCubic = (t)=>1-Math.pow(1-clamp01(t),3);
+const easeInOutCubic = (t)=>{ t=clamp01(t); return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; };
 
-// ---- content builders (built once, driven by opacity/transform per frame) ----
-function buildNotif(id, app, title, msg){
-  const n = document.createElement('div');
-  n.className='notif'; n.id=id;
-  n.innerHTML = `<div class="notif-icon">●</div><div class="notif-body"><div class="notif-app">${app}</div><div class="notif-title">${title}</div><div class="notif-msg">${msg}</div></div>`;
-  return n;
-}
+const el = {
+  logoMark: document.getElementById('logoMark'),
+  logoWordText: document.getElementById('logoWordText'),
+  logoTag: document.getElementById('logoTag'),
+  caption: document.getElementById('caption'),
 
-// Shot 5 notif
-const notif5 = buildNotif('notif5','UPSCALD','New Lead','Jordan submitted the contact form.');
-el.notifLayer.appendChild(notif5);
+  rigB: document.getElementById('rigB'),
+  phoneBWrap: document.getElementById('phoneB-wrap'),
+  glowB: document.getElementById('glowB'),
+  labelB: document.getElementById('labelB'),
+  missCall: document.getElementById('missCallBanner'),
+  autoResp: document.getElementById('autoRespBanner'),
 
-// Shot 8 notifs (3, sequential)
-const notif8a = buildNotif('notif8a','UPSCALD','Reminder Sent','24-hour reminder sent to Jordan.');
-const notif8b = buildNotif('notif8b','UPSCALD','On Our Way','1-hour reminder — technician en route.');
-const notif8c = buildNotif('notif8c','UPSCALD','Job Complete','Panel repair finished — invoice sent.');
-[notif8a,notif8b,notif8c].forEach(n=>el.notifLayer.appendChild(n));
+  rigA: document.getElementById('rigA'),
+  phoneAWrap: document.getElementById('phoneA-wrap'),
+  glowA: document.getElementById('glowA'),
+  labelA: document.getElementById('labelA'),
+  aCall: document.getElementById('a-call'),
+  callRipple: document.getElementById('callRipple'),
+  callingText: document.getElementById('callingText'),
+  endedText: document.getElementById('endedText'),
+  aDim: document.getElementById('aDim'),
+  aLock: document.getElementById('a-lock'),
+  aIMessage: document.getElementById('a-imessage'),
+  aBooking: document.getElementById('a-booking'),
+  aCheck: document.getElementById('aCheck'),
+  pillFlurry: document.getElementById('pillFlurry'),
+  reviewLockup: document.getElementById('reviewLockup'),
+  reviewName: document.getElementById('reviewName'),
+  reviewSub: document.getElementById('reviewSub'),
+};
 
-// Shot 6 thread bubbles
-el.threadLayer.innerHTML = `
-  <div id="typing" class="typing"><span></span><span></span><span></span></div>
-  <div id="b1" class="bubble out">Hi Jordan — thanks for reaching out! What's going on?</div>
-  <div id="b2" class="bubble in">Kitchen outlet stopped working</div>
-  <div id="b3" class="bubble out">We can have someone out Thursday at 2pm — book it?</div>
-  <div id="b4" class="bubble in">Yes please!</div>
-`;
-const bubbles = ['typing','b1','b2','b3','b4'].map(id=>document.getElementById(id));
-
-// Shot 7 booking card
-el.bookLayer.innerHTML = `
-  <div id="bookcard">
-    <div class="bc-label">Appointment Confirmed</div>
-    <div class="bc-title">Thursday · 2:00 PM</div>
-    <div class="bc-sub">Electrical repair — Jordan M.</div>
-    <div class="bc-check" id="bccheck">✓</div>
-  </div>`;
-const bookcard = document.getElementById('bookcard');
-const bccheck = document.getElementById('bccheck');
-
-// Shot 9 review card
-el.reviewLayer.innerHTML = `
-  <div id="reviewcard">
-    <div class="stars">
-      <span class="star" id="s1">★</span><span class="star" id="s2">★</span><span class="star" id="s3">★</span><span class="star" id="s4">★</span><span class="star" id="s5">★</span>
-    </div>
-    <div class="review-name">Jordan left a 5-star review</div>
-    <div class="review-sub">"Fastest response I've ever gotten from a contractor."</div>
-  </div>`;
-const reviewcard = document.getElementById('reviewcard');
+const dots = [document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3')];
 const stars = ['s1','s2','s3','s4','s5'].map(id=>document.getElementById(id));
 
-function setNotifState(node, arriveStart, arriveEnd, holdEnd, leaveEnd, t){
-  if(t<arriveStart || t>leaveEnd){ node.style.opacity=0; return; }
-  if(t<=arriveEnd){
-    const p = easeOutBack(prog(t,arriveStart,arriveEnd));
-    node.style.opacity = clamp01(prog(t,arriveStart,arriveStart+80));
-    node.style.transform = `translateY(${lerp(-50,0,p)}px) scale(${lerp(0.9,1,p)})`;
-  } else if(t<=holdEnd){
-    node.style.opacity=1; node.style.transform='translateY(0px) scale(1)';
-  } else {
-    const p = easeOutCubic(prog(t,holdEnd,leaveEnd));
-    node.style.opacity = 1-p;
-    node.style.transform = `translateY(${lerp(0,-25,p)}px) scale(${lerp(1,0.95,p)})`;
-  }
-}
+// ---- pill flurry content (shot 11) ----
+// #pillFlurry is a sibling of #phoneA-wrap inside #rigA, so rigA's dolly
+// scale (held at 1.28 for the whole flurry, shot 11 [21000-24000)) is
+// applied on top of the pills' own local transform. Reasoning in on-screen
+// pixels is the only way to guarantee pills never overlap the phone (whose
+// on-screen box is x:[143,937] y:[151,1769] at that held scale): each pill
+// docks the edge nearest the phone flush against the phone's own edge, then
+// drifts away from it (off-canvas is fine — only overlapping the phone
+// itself, and the booking card on it, is against the brief). toLocal()
+// converts a desired on-screen point back into the pre-scale local space
+// setPill()/the transform actually operate in.
+const SCALE_HOLD = 1.28;
+const toLocal = (sx,sy)=>({ x: 540+(sx-540)/SCALE_HOLD, y: 960+(sy-960)/SCALE_HOLD });
+const DOCK_LEFT_X = 133;   // just outside the phone's on-screen left edge (143)
+const DOCK_RIGHT_X = 947;  // just outside the phone's on-screen right edge (937)
+const DRIFT = 100;
 
-function setBubbleState(node, arriveStart, arriveEnd, t){
-  if(t<arriveStart){ node.style.opacity=0; return; }
-  const p = easeOutBack(prog(t,arriveStart,arriveEnd));
-  node.style.opacity = clamp01(prog(t,arriveStart,arriveStart+60));
-  node.style.transform = `translateY(${lerp(20,0,p)}px) scale(${lerp(0.95,1,p)})`;
-}
+const PILL_DEFS = [
+  { spawn:21000, side:'L', yFrom:120,  yTo:500,  text:'⏰ Reminder sent' },
+  { spawn:21380, side:'R', yFrom:100,  yTo:460,  text:'✓ Confirmed' },
+  { spawn:21760, side:'L', yFrom:1800, yTo:1400, text:'🔔 No-show follow-up' },
+  { spawn:22140, side:'R', yFrom:1820, yTo:1440, text:'⭐ Review requested' },
+  { spawn:22520, side:'L', yFrom:700,  yTo:900,  text:'🔄 Nurture started' },
+  { spawn:22900, side:'R', yFrom:760,  yTo:960,  text:'✓ Job won' },
+  { spawn:23280, side:'L', yFrom:1900, yTo:1600, text:'⏰ Reminder sent' },
+  { spawn:23660, side:'R', yFrom:80,   yTo:380,  text:'⭐ Review requested' },
+];
+const PILLS = PILL_DEFS.map(def=>{
+  const d = document.createElement('div');
+  d.className='pill'; d.textContent=def.text;
+  el.pillFlurry.appendChild(d);
+  // offsetWidth is measured in local (pre-scale) units, but the rig scales
+  // the pill's rendered width too — not just its position — so the on-screen
+  // width is w*SCALE_HOLD. Docking the *right* edge (nearest the phone) at
+  // DOCK_LEFT_X must account for that, or the right edge overshoots past
+  // the dock line by the un-compensated scale factor.
+  const w = d.offsetWidth;
+  let sxTo, sxFrom;
+  if(def.side==='L'){ sxTo = DOCK_LEFT_X - w*SCALE_HOLD; sxFrom = sxTo - DRIFT; }
+  else { sxTo = DOCK_RIGHT_X; sxFrom = sxTo + DRIFT; }
+  return { node:d, spawn:def.spawn, from:toLocal(sxFrom,def.yFrom), to:toLocal(sxTo,def.yTo) };
+});
+const pillEls = PILLS.map(p=>p.node);
+const PILL_DUR = 1200;
 
-function setCaption(l1, l2, fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd, t){
-  if(t<fadeInStart-1 || t>fadeOutEnd+1){ el.caption.style.opacity=0; return; }
-  el.capL1.textContent=l1; el.capL2.textContent=l2||'';
+function setPill(node, def, t){
+  const p = prog(t, def.spawn, def.spawn+PILL_DUR);
+  if(t<def.spawn || t>=def.spawn+PILL_DUR){ node.style.opacity=0; return; }
   let o;
-  if(t<fadeInEnd) o = prog(t,fadeInStart,fadeInEnd);
-  else if(t<fadeOutStart) o = 1;
-  else o = 1-prog(t,fadeOutStart,fadeOutEnd);
-  el.caption.style.opacity = clamp01(o);
+  if(p<0.2) o = (p/0.2)*0.7;
+  else if(p<0.8) o = 0.7;
+  else o = 0.7*(1-(p-0.8)/0.2);
+  const x = lerp(def.from.x, def.to.x, p);
+  const y = lerp(def.from.y, def.to.y, p);
+  node.style.opacity = o;
+  node.style.transform = `translate(${x}px, ${y}px)`;
 }
 
 /* =========== MASTER TIMELINE FUNCTION =========== */
 function setTime(t){
   t = Math.max(0, Math.min(DURATION_MS, t));
 
-  // ---------- Shot 1 [0-1000]: logo mark only ----------
-  const s1o = prog(t,0,700);
-  // ---------- Shot 2 [1000-2000]: wordmark+tag, hold, hard cut to black at 2000 ----------
-  const s2FadeIn = prog(t,1000,1500);
-  const s2Visible = t>=1000 && t<2000;
-  el.logo.style.opacity = t<2000 ? Math.max(s1o*(t<1000?1:1), (t>=1000? Math.max(s1o,1):s1o)) : 0;
-  if(t<1000){ el.logo.style.opacity=s1o; el.logoTag.style.opacity=0; document.querySelector('#logo .word').style.opacity=0; }
-  else if(t<2000){ el.logo.style.opacity=1; document.querySelector('#logo .word').style.opacity=s2FadeIn; el.logoTag.style.opacity=s2FadeIn; el.logoTag.textContent='Smarter systems. More customers.'; }
-  else { el.logo.style.opacity=0; }
+  // ---------- Shot 1 [0-2000]: logo mark fades in alone ----------
+  // ---------- Shot 2 [2000-4000]: wordmark + tagline fade in, hold, hard cut to black ----------
+  let markOp, wordOp;
+  if(t<2000){ markOp = t/2000; wordOp = 0; }
+  else if(t<4000){ markOp = 1; wordOp = clamp01((t-2000)/600); }
+  else if(t<29000){ markOp = 0; wordOp = 0; }
+  else { const p = clamp01((t-29000)/400); markOp = p; wordOp = p; }
+  el.logoMark.style.opacity = markOp;
+  el.logoWordText.style.opacity = wordOp;
+  el.logoTag.textContent = t>=29000 ? 'Your leads, always answered.' : 'Smarter systems. More customers.';
 
-  // ---------- Shot 3 [2000-3000]: "A missed call is a lost customer." ----------
-  setCaption('A missed call is a lost customer.', '', 2000,2350, 2650,3000, t);
+  // ---------- Shot 14 [28000-29000]: "Nothing goes cold." ----------
+  if(t<28000 || t>=29000) el.caption.style.opacity = 0;
+  else if(t<28300) el.caption.style.opacity = clamp01((t-28000)/300);
+  else el.caption.style.opacity = 1;
 
-  // ---------- Shot 4 [3000-5000]: phone rises + lock screen ----------
-  const phoneStart=3000;
-  if(t<phoneStart){ el.phoneWrap.style.opacity=0; }
-  else {
-    const settleP = easeOutBack(prog(t,3000,3800));
-    el.phoneWrap.style.opacity = clamp01(prog(t,3000,3300));
-    el.phoneWrap.style.transform = `translateY(${lerp(60,0,settleP)}px) scale(${lerp(0.94,1,settleP)})`;
-    el.glow.style.opacity = clamp01(prog(t,3000,3800));
-    el.wallpaper.style.opacity = clamp01(prog(t,3000,3300));
-    el.locktime.style.opacity = clamp01(prog(t,3000,3300));
-  }
+  // =========================================================
+  // PHONE B — Mike's Electric (shots 6-7, [10000-15000))
+  // =========================================================
+  const bVisible = t>=10000 && t<15000;
+  const cameraB = t<10000 ? 1 : t<15000 ? lerp(1,1.25, easeInOutCubic(prog(t,10000,15000))) : 1.25;
+  el.rigB.style.transform = `scale(${cameraB})`;
+  el.phoneBWrap.style.opacity = bVisible ? 1 : 0;
 
-  // ---------- continuous dolly-in [3000 -> 13000], holds at 13000-15000, reverses 15000-16000 ----------
-  let scale = 1;
-  const dollyStart=3000, dollyTightEnd=13000, holdEnd=15000, pullbackEnd=16000;
-  if(t<dollyStart) scale=1;
-  else if(t<dollyTightEnd) scale = lerp(1, 1.42, easeInOutCubic(prog(t,dollyStart,dollyTightEnd)));
-  else if(t<holdEnd) scale=1.42;
-  else if(t<pullbackEnd) scale = lerp(1.42, 0.7, easeInOutCubic(prog(t,holdEnd,pullbackEnd)));
-  else scale=0.7;
-  if(t>=dollyStart){
-    const settleP = t<3800 ? easeOutBack(prog(t,3000,3800)) : 1;
-    const baseY = lerp(60,0,settleP);
-    el.phoneWrap.style.transform = `translateY(${baseY}px) scale(${scale})`;
-  }
-  if(t>pullbackEnd-200 && t<pullbackEnd+400){
-    el.phoneWrap.style.opacity = clamp01(1-prog(t,pullbackEnd-200,pullbackEnd+200));
-  } else if (t<=pullbackEnd-200 && t>=phoneStart){
-    el.phoneWrap.style.opacity=1;
-  } else if(t>pullbackEnd+400){
-    el.phoneWrap.style.opacity=0;
-  }
+  let bx;
+  if(t<10000) bx = 900;
+  else if(t<10500) bx = lerp(900,0, easeOutBack(prog(t,10000,10500)));
+  else bx = 0;
+  el.phoneBWrap.style.transform = `translateX(${bx}px)`;
 
-  // hide lockscreen once thread/notifs begin
-  el.locktime.style.opacity = (t>=3300 && t<5000) ? 1 : 0;
-  el.wallpaper.style.opacity = (t>=3300 && t<11000) ? (t<5000?1:0.25) : (t<3300?0:0);
+  el.glowB.style.opacity = t<10000 ? 0 : t<10500 ? clamp01((t-10000)/500) : t<15000 ? 1 : 0;
+  el.labelB.style.opacity = t<10500 ? 0 : t<10700 ? clamp01((t-10500)/200) : bVisible ? 1 : 0;
 
-  // ---------- Shot 5 [5000-6000]: New Lead notif ----------
-  setNotifState(notif5, 5000,5300,5500,6000, t);
+  // ---------- Shot 6 [10000-13000]: missed-call banner (drops in near settle, then static) ----------
+  if(t<10500 || t>=15000){ el.missCall.style.opacity=0; el.missCall.style.transform='translateY(-50px)'; }
+  else if(t<10800){ const p=easeOutBack(prog(t,10500,10800)); el.missCall.style.opacity=clamp01((t-10500)/150); el.missCall.style.transform=`translateY(${lerp(-50,0,p)}px)`; }
+  else { el.missCall.style.opacity=1; el.missCall.style.transform='translateY(0px)'; }
 
-  // ---------- Shot 6 [6000-9000]: thread ----------
-  setBubbleState(bubbles[0], 6000,6250, t); // typing
-  document.getElementById('typing').style.opacity = (t>=6000 && t<6650) ? clamp01(prog(t,6000,6150)) * (t<6500?1:1-prog(t,6500,6650)) : 0;
-  setBubbleState(bubbles[1], 6650,6950, t); // b1 out
-  setBubbleState(bubbles[2], 7350,7600, t); // b2 in
-  setBubbleState(bubbles[3], 8000,8300, t); // b3 out
-  setBubbleState(bubbles[4], 8650,8900, t); // b4 in
-  el.threadLayer.style.opacity = (t>=6000 && t<9200) ? 1 : (t<6000?0:0);
+  // ---------- Shot 7 [13000-15000]: auto-response banner drops in beneath ----------
+  if(t<13000 || t>=15000){ el.autoResp.style.opacity=0; el.autoResp.style.transform='translateY(-50px)'; }
+  else if(t<13300){ const p=easeOutBack(prog(t,13000,13300)); el.autoResp.style.opacity=clamp01((t-13000)/150); el.autoResp.style.transform=`translateY(${lerp(-50,0,p)}px)`; }
+  else { el.autoResp.style.opacity=1; el.autoResp.style.transform='translateY(0px)'; }
 
-  // ---------- Shot 7 [9000-11000]: booking card ----------
-  if(t<9000){ bookcard.style.opacity=0; bookcard.style.transform='translateY(100%)'; bccheck.style.opacity=0; }
-  else if(t<9450){
-    const p = easeOutCubic(prog(t,9000,9450));
-    bookcard.style.opacity=1;
-    bookcard.style.transform = `translateY(${lerp(100,0,p)}%)`;
-  } else if (t<11000){
-    bookcard.style.opacity=1; bookcard.style.transform='translateY(0%)';
-    const cp = easeOutBack(prog(t,9500,9850));
-    bccheck.style.opacity = clamp01(prog(t,9500,9650));
-    bccheck.style.transform = `scale(${lerp(0.4,1,cp)})`;
+  // =========================================================
+  // PHONE A — Customer (shots 3-4 [4000-9000), shots 8-11 [15000-24000))
+  // =========================================================
+  const aVisible = (t>=4000 && t<9000) || (t>=15000 && t<24000);
+  el.phoneAWrap.style.opacity = aVisible ? 1 : 0;
+
+  let ax;
+  if(t<4000) ax = -900;
+  else if(t<4500) ax = lerp(-900,0, easeOutBack(prog(t,4000,4500)));
+  else ax = 0;
+  el.phoneAWrap.style.transform = `translateX(${ax}px)`;
+
+  el.labelA.style.opacity = t<4500 ? 0 : t<4700 ? clamp01((t-4500)/200) : aVisible ? 1 : 0;
+
+  let glowAOp;
+  if(t>=4000 && t<4500) glowAOp = clamp01((t-4000)/500);
+  else if(t>=4500 && t<9000) glowAOp = 1;
+  else if(t>=15000 && t<27000) glowAOp = 1;
+  else if(t>=27000 && t<28000) glowAOp = lerp(1,0, easeInOutCubic(prog(t,27000,28000)));
+  else glowAOp = 0;
+  el.glowA.style.opacity = glowAOp;
+
+  // ---------- Shots 9-10-11-12-13: continuous dolly-in on Phone A, hold, fast pull-back ----------
+  let cameraA;
+  if(t<16000) cameraA = 1;
+  else if(t<21000) cameraA = lerp(1,1.28, easeInOutCubic(prog(t,16000,21000)));
+  else if(t<27000) cameraA = 1.28;
+  else if(t<28000) cameraA = lerp(1.28,0.55, easeInOutCubic(prog(t,27000,28000)));
+  else cameraA = 0.55;
+  el.rigA.style.transform = `scale(${cameraA})`;
+
+  // ---------- Shots 3-4 [4000-9000]: outgoing call screen ----------
+  const callActive = t>=4000 && t<9000;
+  el.aCall.style.opacity = callActive ? 1 : 0;
+  const ringing = t>=4000 && t<8000;
+  if(ringing){
+    const ringP = ((t-4000) % 900)/900;
+    el.callRipple.style.transform = `scale(${lerp(1,1.6,ringP)})`;
+    el.callRipple.style.opacity = lerp(0.6,0,ringP);
+    const dotPhase = (t-4000) % 900;
+    dots.forEach((d,i)=>{ d.style.opacity = (dotPhase>=i*300 && dotPhase<i*300+300) ? 1 : 0.3; });
   } else {
-    bookcard.style.opacity = clamp01(1-prog(t,11000,11150));
+    el.callRipple.style.opacity = 0;
   }
-  el.bookLayer.style.opacity = (t>=9000 && t<11200) ? 1 : 0;
+  el.callingText.style.opacity = t<8000 ? 1 : t<8300 ? 1-clamp01((t-8000)/300) : 0;
+  el.endedText.style.opacity = t<8000 ? 0 : t<8300 ? clamp01((t-8000)/300) : 1;
+  el.aDim.style.opacity = t<8500 ? 0 : t<9000 ? lerp(0,0.15, clamp01((t-8500)/500)) : 0.15;
 
-  // ---------- Shot 8 [11000-13000]: 3 quick notifs ----------
-  setNotifState(notif8a, 11000,11220,11550,11800, t);
-  setNotifState(notif8b, 11800,12020,12350,12600, t);
-  setNotifState(notif8c, 12600,12820,13150,13400, t);
+  // ---------- Shots 8-11 [15000-24000]: idle lock screen base ----------
+  el.aLock.style.opacity = (t>=15000 && t<24000) ? 1 : 0;
 
-  // ---------- Shot 9 [13000-15000]: review card, hold ----------
-  if(t<13000){ reviewcard.style.opacity=0; reviewcard.style.transform='scale(0.9)'; }
-  else {
-    reviewcard.style.opacity = clamp01(prog(t,13000,13200));
-    reviewcard.style.transform = `scale(${lerp(0.9,1,easeOutCubic(prog(t,13000,13300)))})`;
-  }
-  const starDelays = [13100,13180,13260,13340,13420];
+  // ---------- Shot 9 [16000-18000]: iMessage banner ----------
+  if(t<16000 || t>=18000){ el.aIMessage.style.opacity=0; el.aIMessage.style.transform='translateY(-50px)'; }
+  else if(t<16300){ const p=easeOutBack(prog(t,16000,16300)); el.aIMessage.style.opacity=clamp01((t-16000)/150); el.aIMessage.style.transform=`translateY(${lerp(-50,0,p)}px)`; }
+  else { el.aIMessage.style.opacity=1; el.aIMessage.style.transform='translateY(0px)'; }
+
+  // ---------- Shot 10 [18000-21000]: booking bottom sheet ----------
+  if(t<18000 || t>=24000){ el.aBooking.style.opacity=0; el.aBooking.style.transform='translateY(100%)'; }
+  else if(t<18400){ const p=easeOutCubic(prog(t,18000,18400)); el.aBooking.style.opacity=1; el.aBooking.style.transform=`translateY(${lerp(100,0,p)}%)`; }
+  else { el.aBooking.style.opacity=1; el.aBooking.style.transform='translateY(0%)'; }
+  if(t<18500 || t>=24000){ el.aCheck.style.opacity=0; el.aCheck.style.transform='scale(0.4)'; }
+  else if(t<18800){ const p=easeOutBack(prog(t,18500,18800)); el.aCheck.style.opacity=clamp01((t-18500)/100); el.aCheck.style.transform=`scale(${lerp(0.4,1,p)})`; }
+  else { el.aCheck.style.opacity=1; el.aCheck.style.transform='scale(1)'; }
+
+  // ---------- Shot 11 [21000-24000]: notification pill flurry ----------
+  PILLS.forEach(p=>setPill(p.node, p, t));
+
+  // =========================================================
+  // Shot 12 [24000-27000] + Shot 13 [27000-28000]: review lockup
+  // =========================================================
+  let reviewOp;
+  if(t<24000) reviewOp = 0;
+  else if(t<27000) reviewOp = 1;
+  else if(t<28000) reviewOp = lerp(1,0, easeInOutCubic(prog(t,27000,28000)));
+  else reviewOp = 0;
+  el.reviewLockup.style.opacity = reviewOp;
+
+  const starDelays = [24000,24080,24160,24240,24320];
   stars.forEach((s,i)=>{
     const st = starDelays[i];
-    if(t<st){ s.style.opacity=0; s.style.transform='scale(0) rotate(-40deg)'; }
-    else {
-      const p = easeOutBack(prog(t,st,st+300));
-      s.style.opacity=clamp01(prog(t,st,st+120));
-      s.style.transform = `scale(${lerp(0,1,p)}) rotate(${lerp(-40,0,p)}deg)`;
-    }
+    if(t<24000 || t>=28000){ s.style.opacity=0; s.style.transform='scale(0)'; return; }
+    if(t<st){ s.style.opacity=0; s.style.transform='scale(0)'; }
+    else { const p = easeOutBack(prog(t,st,st+250)); s.style.opacity=clamp01((t-st)/100); s.style.transform=`scale(${lerp(0,1,p)})`; }
   });
-  el.reviewLayer.style.opacity = (t>=13000 && t<16000) ? 1 : 0;
+  el.reviewName.style.opacity = (t>=24700 && t<28000) ? clamp01((t-24700)/200) : (t>=28000 ? 1 : 0);
+  el.reviewSub.style.opacity = (t>=25000 && t<28000) ? clamp01((t-25000)/200) : (t>=28000 ? 1 : 0);
 
-  // ---------- Shot 10 [15000-16000]: pullback handled above via scale; extra fade to black ----------
-  if(t>=16000 && t<16400){
-    el.veil.style.opacity = clamp01(prog(t,15900,16300));
-  } else if(t>=16400){
-    el.veil.style.opacity=1;
-  } else {
-    el.veil.style.opacity=0;
-  }
-
-  // ---------- Shot 11 [16400-18400]: "Nothing goes cold." ----------
-  setCaption('Nothing goes cold.', '', 16600,17000, 18000,18350, t);
-
-  // ---------- Shot 12 [18400-20000]: closing logo lockup ----------
-  if(t<18350){
-    // keep hidden until previous cuts away
-  } else {
-    const p = prog(t,18400,18900);
-    el.logo.style.opacity = p>0?1:0;
-    document.querySelector('#logo .word').style.opacity = clamp01(prog(t,18400,18800));
-    el.logoTag.style.opacity = clamp01(prog(t,18400,18800));
-    el.logoTag.textContent='Your leads, always answered.';
-  }
-  if(t>=18350 && t<18450){ el.veil.style.opacity = 1-prog(t,18350,18450); }
-  if(t>=20000-1){ el.veil.style.opacity=0; }
+  // ---------- Shot 15 [29000-30000]: closing logo lockup handled above with the opening logo ----------
 }
 window.__setTime = setTime;
 window.__DURATION_MS = DURATION_MS;
@@ -487,6 +579,8 @@ if(!window.__RENDER_MODE){
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+} else {
+  window.__setTime(0);
 }
 </script>
 </body>

@@ -1,7 +1,7 @@
 {
   "name": "upscald-demo-video",
   "version": "1.0.0",
-  "description": "Renders the UPSCALD Marketing 20-second demo video to a real MP4 file, frame-accurate, no third-party video generation service required.",
+  "description": "Renders the UPSCALD Marketing 30-second demo video to a real MP4 file, frame-accurate, no third-party video generation service required.",
   "private": true,
   "scripts": {
     "postinstall": "playwright install chromium",
