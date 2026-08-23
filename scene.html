@@ -5,25 +5,32 @@
 <title>UPSCALD — One Call (render source)</title>
 <style>
   :root{
-    --black:#000000;
+    /* Brand grayscale — UpScald Marketing identity board */
+    --black:#0B0B0D;
+    --gray-dark:#1D1D1F;
+    --gray:#686B70;
+    --gray-light:#F5F5F7;
     --white:#FFFFFF;
-    --gray:#8A8A8F;
+    /* Brand accent gradient: orange -> purple -> cyan */
     --orange:#FF8A00;
     --orange-red:#FF4500;
     --purple:#7B3FF2;
     --cyan:#00C2FF;
     --blue:#2244FF;
+    /* Brand typography: SF Pro Display for headlines, SF Pro Text for body/support copy */
+    --font-display:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+    --font-text:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{
     width:1080px;height:1920px; /* 9:16 render canvas */
     background:var(--black);
     overflow:hidden;
-    font-family:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+    font-family:var(--font-display);
     -webkit-font-smoothing:antialiased;
   }
   #stage{
-    position:relative; width:1080px; height:1920px; background:#000;
+    position:relative; width:1080px; height:1920px; background:var(--black);
     display:flex; align-items:center; justify-content:center;
   }
 
@@ -35,7 +42,7 @@
   #logo svg{ width:150px; height:150px; margin-bottom:36px; }
   #logo .word{ font-size:56px; font-weight:700; color:var(--white); letter-spacing:-1px; }
   #logo .word .sub{ font-weight:300; color:var(--gray); }
-  #logo .tag{ font-size:26px; color:var(--gray); font-weight:500; margin-top:16px; }
+  #logo .tag{ font-size:26px; color:var(--gray); font-weight:500; margin-top:16px; font-family:var(--font-text); }
 
   /* ============ CAPTION ============ */
   #caption{
@@ -43,7 +50,7 @@
     padding:0 90px; top:50%; transform:translateY(-50%);
   }
   #caption .l1{ font-size:58px; font-weight:700; color:var(--white); letter-spacing:-1px; line-height:1.2; }
-  #caption .l2{ font-size:30px; color:var(--gray); font-weight:500; margin-top:18px; }
+  #caption .l2{ font-size:30px; color:var(--gray); font-weight:500; margin-top:18px; font-family:var(--font-text); }
 
   /* ============ PHONE ============ */
   #phone-wrap{
@@ -99,7 +106,7 @@
     position:absolute; top:230px; left:0; right:0; text-align:center; z-index:20; color:#fff;
   }
   #locktime .t{ font-size:158px; font-weight:200; letter-spacing:-4px; line-height:1; }
-  #locktime .d{ font-size:34px; font-weight:600; margin-top:14px; opacity:0.92; }
+  #locktime .d{ font-size:34px; font-weight:600; margin-top:14px; opacity:0.92; font-family:var(--font-text); }
 
   /* Notification */
   .notif{
@@ -117,9 +124,9 @@
     background:linear-gradient(135deg,var(--orange),var(--purple),var(--cyan));
   }
   .notif-body{ flex:1; min-width:0; }
-  .notif-app{ font-size:22px; font-weight:700; color:rgba(255,255,255,0.55); text-transform:uppercase; letter-spacing:1px; }
+  .notif-app{ font-size:22px; font-weight:700; color:rgba(255,255,255,0.55); text-transform:uppercase; letter-spacing:1px; font-family:var(--font-text); }
   .notif-title{ font-size:32px; font-weight:700; color:#fff; margin-top:4px; }
-  .notif-msg{ font-size:27px; color:rgba(255,255,255,0.85); margin-top:6px; line-height:1.35; }
+  .notif-msg{ font-size:27px; color:rgba(255,255,255,0.85); margin-top:6px; line-height:1.35; font-family:var(--font-text); }
 
   /* Thread */
   #thread{
@@ -128,7 +135,7 @@
   }
   .bubble{
     max-width:80%; padding:22px 30px; border-radius:38px; font-size:29px; line-height:1.4;
-    opacity:0; transform:translateY(20px) scale(0.95);
+    opacity:0; transform:translateY(20px) scale(0.95); font-family:var(--font-text);
   }
   .bubble.out{ align-self:flex-end; background:linear-gradient(135deg,var(--orange),var(--purple)); color:#fff; border-bottom-right-radius:12px; }
   .bubble.in{ align-self:flex-start; background:rgba(255,255,255,0.12); color:#fff; border-bottom-left-radius:12px; }
@@ -141,14 +148,14 @@
   /* Booking card */
   #bookcard{
     position:absolute; left:44px; right:44px; bottom:0;
-    background:#121214; border-radius:56px 56px 0 0; padding:56px 48px 90px;
+    background:var(--gray-dark); border-radius:56px 56px 0 0; padding:56px 48px 90px;
     border:1px solid rgba(255,255,255,0.08); border-bottom:none;
     box-shadow:0 -30px 60px -20px rgba(0,0,0,0.7);
     opacity:0; transform:translateY(100%);
   }
   .bc-label{ font-size:24px; font-weight:700; background:linear-gradient(90deg,var(--orange),var(--purple)); -webkit-background-clip:text; background-clip:text; color:transparent; text-transform:uppercase; letter-spacing:2px; }
   .bc-title{ font-size:44px; font-weight:700; color:#fff; margin-top:14px; }
-  .bc-sub{ font-size:28px; color:rgba(255,255,255,0.6); margin-top:10px; }
+  .bc-sub{ font-size:28px; color:rgba(255,255,255,0.6); margin-top:10px; font-family:var(--font-text); }
   .bc-check{
     margin-top:38px; width:96px; height:96px; border-radius:50%;
     background:linear-gradient(135deg,var(--cyan),var(--purple));
@@ -161,9 +168,9 @@
   .stars{ font-size:70px; letter-spacing:14px; }
   .star{ opacity:0; display:inline-block; transform:scale(0) rotate(-40deg); color:var(--orange); }
   .review-name{ color:#fff; font-size:36px; font-weight:700; margin-top:26px; }
-  .review-sub{ color:rgba(255,255,255,0.5); font-size:26px; margin-top:8px; font-style:italic; }
+  .review-sub{ color:rgba(255,255,255,0.5); font-size:26px; margin-top:8px; font-style:italic; font-family:var(--font-text); }
 
-  #veil{ position:absolute; inset:0; background:#000; opacity:0; z-index:500; }
+  #veil{ position:absolute; inset:0; background:var(--black); opacity:0; z-index:500; }
 </style>
 </head>
 <body>

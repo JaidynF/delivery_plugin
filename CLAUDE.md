@@ -106,6 +106,23 @@ visual/timing logic itself.
 `assets/music.mp3` and the `frames/`/`output/` directories are optional
 and generated, respectively — none are committed (see `.gitignore`).
 
+## Brand reference
+
+`scene.html`'s `:root` custom properties are pinned to the UpScald Marketing
+identity board — keep them exact rather than approximating:
+
+- Grayscale: `--black:#0B0B0D`, `--gray-dark:#1D1D1F`, `--gray:#686B70`,
+  `--gray-light:#F5F5F7`, `--white:#FFFFFF`.
+- Accent gradient: `--orange:#FF8A00` → `--purple:#7B3FF2` → `--cyan:#00C2FF`
+  (`--orange-red:#FF4500` and `--blue:#2244FF` are extra stops used only
+  inside the logo mark's own SVG gradients, not general brand colors).
+- Type: `--font-display` (SF Pro Display) for headlines/wordmark,
+  `--font-text` (SF Pro Text) for body/support copy (taglines, notification
+  text, chat bubbles, sub-labels).
+- The phone hardware mockup (bezel gradient, OLED screen/notch black) and
+  the lock-screen wallpaper gradient are device/scene chrome, not brand
+  surfaces — they're intentionally not tied to the brand grayscale tokens.
+
 ## Working in this repo
 
 - Never let `scene.html`'s `DURATION_MS` and `render.js`'s `DURATION_MS`
