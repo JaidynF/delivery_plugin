@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" role="img" aria-label="BAESICK girl mascot">
+  <title>BAESICK girl</title>
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(-10)">
+      <rect width="22" height="22" fill="#D7263D"/>
+      <circle cx="6" cy="6" r="4.2" fill="#FFF8EE"/>
+      <circle cx="17" cy="17" r="4.2" fill="#FFF8EE"/>
+    </pattern>
+  </defs>
+  <g stroke="#141414" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- oversized hoodie -->
+    <path d="M40 440 Q48 372 110 340 Q150 322 170 318 L230 318 Q250 322 290 340 Q352 372 360 440 Z" fill="#23305E"/>
+    <path d="M150 324 Q200 372 250 324" fill="#1A244A"/>
+    <path d="M178 350 L172 402 M222 350 L228 402" stroke-width="5" fill="none" stroke="#FFF8EE"/>
+    <circle cx="172" cy="406" r="5" fill="#FFF8EE" stroke-width="4"/>
+    <circle cx="228" cy="406" r="5" fill="#FFF8EE" stroke-width="4"/>
+    <!-- neck -->
+    <path d="M178 276 L176 326 Q200 340 224 326 L222 276 Z" fill="#F4D3C2"/>
+    <!-- hair back -->
+    <path d="M104 214 Q88 150 118 112 Q160 72 200 74 Q240 72 282 112 Q312 150 296 214 Q300 250 280 268 L264 236 L136 236 L120 268 Q100 250 104 214 Z" fill="#141414"/>
+    <!-- face -->
+    <path d="M122 196 Q120 128 200 122 Q280 128 278 196 Q276 254 232 282 Q200 298 168 282 Q124 254 122 196 Z" fill="#F4D3C2"/>
+    <!-- finger-wave fringe -->
+    <path d="M110 206 Q104 140 150 116 Q200 96 250 116 Q296 140 290 206 Q284 176 266 162 Q256 178 238 170 Q228 150 206 158 Q196 176 174 166 Q164 150 146 162 Q134 176 120 170 Q112 186 110 206 Z" fill="#141414"/>
+    <!-- side curls -->
+    <path d="M112 226 Q92 232 96 254 Q100 270 116 266 Q106 256 112 246 Q122 238 126 250" fill="#141414"/>
+    <path d="M118 254 Q102 270 112 286 Q124 294 132 282 Q120 280 122 268" fill="#141414"/>
+    <path d="M288 226 Q308 232 304 254 Q300 270 284 266 Q294 256 288 246 Q278 238 274 250" fill="#141414"/>
+    <path d="M282 254 Q298 270 288 286 Q276 294 268 282 Q280 280 278 268" fill="#141414"/>
+    <!-- ice pack -->
+    <g transform="rotate(-9 200 88)">
+      <path d="M108 104 Q110 62 200 56 Q290 62 292 104 Q250 124 200 122 Q150 124 108 104 Z" fill="url(#dots)"/>
+      <path d="M150 68 Q170 90 160 114 M244 66 Q232 90 244 116" fill="none" stroke-width="3.5" opacity=".55"/>
+      <rect x="182" y="30" width="36" height="28" rx="5" fill="#C9CCD1"/>
+      <path d="M190 34 V54 M200 34 V54 M210 34 V54" stroke-width="2.5" opacity=".5"/>
+      <rect x="176" y="24" width="48" height="10" rx="5" fill="#E4E6EA"/>
+    </g>
+    <!-- worried brows -->
+    <path d="M140 178 Q158 166 184 170" fill="none" stroke-width="5"/>
+    <path d="M216 170 Q242 166 260 178" fill="none" stroke-width="5"/>
+    <!-- sleepy eyes -->
+    <ellipse cx="165" cy="210" rx="24" ry="28" fill="#FFFFFF"/>
+    <ellipse cx="235" cy="210" rx="24" ry="28" fill="#FFFFFF"/>
+    <circle cx="168" cy="218" r="13" fill="#141414" stroke="none"/>
+    <circle cx="232" cy="218" r="13" fill="#141414" stroke="none"/>
+    <circle cx="173" cy="213" r="4" fill="#FFFFFF" stroke="none"/>
+    <circle cx="237" cy="213" r="4" fill="#FFFFFF" stroke="none"/>
+    <!-- heavy lids -->
+    <path d="M140 206 Q142 182 165 182 Q188 182 190 206 Q165 200 142 206 Z" fill="#E9BBA8"/>
+    <path d="M210 206 Q212 182 235 182 Q258 182 260 206 Q235 200 212 206 Z" fill="#E9BBA8"/>
+    <path d="M140 206 Q165 199 190 206 M210 206 Q235 199 260 206" fill="none" stroke-width="5"/>
+    <path d="M146 203 Q136 194 130 196 M152 200 Q146 188 140 186 M160 199 Q158 186 154 182 M254 203 Q264 194 270 196 M248 200 Q254 188 260 186 M240 199 Q242 186 246 182" fill="none" stroke-width="4"/>
+    <!-- flushed cheeks -->
+    <ellipse cx="140" cy="244" rx="17" ry="10" fill="#E8505B" stroke="none" opacity=".5"/>
+    <ellipse cx="260" cy="244" rx="17" ry="10" fill="#E8505B" stroke="none" opacity=".5"/>
+    <!-- nose -->
+    <path d="M196 238 Q201 244 206 238" fill="none" stroke-width="4"/>
+    <!-- thermometer -->
+    <g transform="rotate(-14 208 264)">
+      <rect x="206" y="257" width="100" height="14" rx="7" fill="#FFFFFF" stroke-width="4.5"/>
+      <rect x="212" y="262" width="58" height="4" rx="2" fill="#D7263D" stroke="none"/>
+      <path d="M278 258 V264 M286 258 V264 M294 258 V264" stroke-width="2"/>
+    </g>
+    <!-- pouty lips around it -->
+    <path d="M186 262 Q194 252 202 258 Q210 252 216 262 Q210 276 200 276 Q190 276 186 262 Z" fill="#D7263D" stroke-width="4.5"/>
+    <!-- sweat drop -->
+    <path d="M290 160 Q300 176 296 184 Q290 192 284 184 Q281 176 290 160 Z" fill="#9FD3F2" stroke-width="4"/>
+    <g id="point">
+      <path d="M268 440 L276 396 Q300 384 336 394 L344 440 Z" fill="#23305E"/>
+      <path d="M270 400 Q306 386 340 398 L336 412 Q304 400 274 414 Z" fill="#FFF8EE"/>
+      <path d="M272 396 Q262 356 290 340 Q326 326 346 352 Q358 378 338 398 Q306 408 272 396 Z" fill="#FFF8EE"/>
+      <path d="M296 356 Q316 350 334 360 M292 372 Q314 366 336 376 M296 388 Q314 384 330 390" fill="none" stroke-width="4"/>
+      <circle cx="284" cy="350" r="24" fill="#FFF8EE"/>
+      <path d="M274 342 Q284 334 294 342 Q296 354 284 356 Q272 354 274 342 Z" fill="#F4D3C2" stroke-width="3.5"/>
+    </g>
+  </g>
+</svg>
