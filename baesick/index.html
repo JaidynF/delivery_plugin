@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BAESICK Clothing — Basics, Considered</title>
+  <meta name="description" content="BAESICK Clothing. Elevated everyday basics in six tonal shades, sized XXS–4X.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Archivo+Narrow:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Garment silhouettes: one sprite, tinted via currentColor per shade -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="g-tee" viewBox="0 0 200 240"><path d="M60 30 L85 22 Q100 34 115 22 L140 30 L172 62 L152 84 L140 74 L140 210 L60 210 L60 74 L48 84 L28 62 Z"/></symbol>
+      <symbol id="g-longsleeve" viewBox="0 0 200 240"><path d="M62 30 L86 22 Q100 34 114 22 L138 30 Q156 40 160 70 L170 190 L150 192 L140 90 L140 212 L60 212 L60 90 L50 192 L30 190 L40 70 Q44 40 62 30 Z"/></symbol>
+      <symbol id="g-hoodie" viewBox="0 0 200 240"><path d="M64 36 Q66 8 100 8 Q134 8 136 36 Q156 44 162 74 L172 196 L150 198 L142 100 L142 214 L58 214 L58 100 L50 198 L28 196 L38 74 Q44 44 64 36 Z"/><path d="M76 150 L124 150 L130 186 L70 186 Z" opacity=".12" fill="#000"/></symbol>
+      <symbol id="g-sweatpant" viewBox="0 0 200 240"><path d="M66 20 L134 20 L140 60 L146 206 Q146 214 138 214 L110 214 L100 90 L90 214 L62 214 Q54 214 54 206 L60 60 Z"/><rect x="66" y="20" width="68" height="10" opacity=".12" fill="#000"/></symbol>
+      <symbol id="g-shorts" viewBox="0 0 200 240"><path d="M56 60 L144 60 L152 160 L108 166 L100 110 L92 166 L48 160 Z"/><rect x="56" y="60" width="88" height="10" opacity=".12" fill="#000"/></symbol>
+      <symbol id="g-tank" viewBox="0 0 200 240"><path d="M74 22 L88 22 Q100 50 112 22 L126 22 Q128 60 146 76 L146 214 L54 214 L54 76 Q72 60 74 22 Z"/></symbol>
+      <symbol id="g-bodysuit" viewBox="0 0 200 240"><path d="M76 22 L88 22 Q100 44 112 22 L124 22 Q126 62 142 74 L140 150 Q124 176 108 196 L92 196 Q76 176 60 150 L58 74 Q74 62 76 22 Z"/></symbol>
+      <symbol id="g-boxer" viewBox="0 0 200 240"><path d="M50 70 L150 70 L154 150 L112 160 L100 130 L88 160 L46 150 Z"/><rect x="50" y="70" width="100" height="12" opacity=".14" fill="#000"/></symbol>
+      <symbol id="g-sock" viewBox="0 0 200 240"><path d="M80 30 L110 30 L110 150 Q110 176 140 180 Q160 184 160 200 Q160 214 140 214 L96 214 Q80 214 80 196 Z"/><rect x="80" y="30" width="30" height="14" opacity=".12" fill="#000"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#shop">Skip to shop</a>
+
+  <div class="announce" role="note">
+    <span>Free shipping over $100</span>
+    <span class="dot" aria-hidden="true"></span>
+    <span>Sizes XXS — 4X</span>
+    <span class="dot" aria-hidden="true"></span>
+    <span>Free returns, 30 days</span>
+  </div>
+
+  <header class="header">
+    <nav class="nav nav-left" aria-label="Primary">
+      <button class="menu-btn" aria-label="Open menu" aria-expanded="false" data-menu-toggle>Menu</button>
+      <a href="#shop" data-cat="all">Shop</a>
+      <a href="#shop" data-cat="tops">Tops</a>
+      <a href="#shop" data-cat="bottoms">Bottoms</a>
+      <a href="#shop" data-cat="intimates">Intimates</a>
+      <a href="#journal">Journal</a>
+    </nav>
+    <a class="wordmark" href="#top" aria-label="BAESICK home">BAESICK</a>
+    <nav class="nav nav-right" aria-label="Utility">
+      <button data-search-open>Search</button>
+      <a href="#account" class="hide-sm">Account</a>
+      <button data-cart-open>Bag (<span data-cart-count>0</span>)</button>
+    </nav>
+  </header>
+
+  <div class="mobile-menu" data-mobile-menu hidden>
+    <a href="#shop" data-cat="all">Shop all</a>
+    <a href="#shop" data-cat="tops">Tops</a>
+    <a href="#shop" data-cat="bottoms">Bottoms</a>
+    <a href="#shop" data-cat="intimates">Intimates</a>
+    <a href="#journal">Journal</a>
+    <a href="#account">Account</a>
+  </div>
+
+  <main id="top">
+
+    <!-- HERO: tonal field, one garment, very little copy -->
+    <section class="hero" data-hero>
+      <div class="hero-meta">
+        <span>Season 01</span>
+        <span>Foundations</span>
+      </div>
+      <div class="hero-stage" aria-hidden="true">
+        <svg class="hero-garment"><use href="#g-hoodie"/></svg>
+      </div>
+      <div class="hero-copy">
+        <h1>Basics, considered.</h1>
+        <p>Heavyweight cotton. Six shades. Every body, XXS to 4X.</p>
+        <a class="btn" href="#shop">Shop the collection</a>
+      </div>
+      <div class="hero-shade" data-hero-shade>Bone</div>
+    </section>
+
+    <!-- SHADES: the core idea of the brand -->
+    <section class="shades" aria-labelledby="shades-h">
+      <div class="section-head">
+        <h2 id="shades-h">Shop by shade</h2>
+        <p>Every piece comes in the same six tones, so it all goes together.</p>
+      </div>
+      <div class="shade-row" role="radiogroup" aria-label="Filter by shade" data-shade-row></div>
+    </section>
+
+    <!-- SHOP -->
+    <section class="shop" id="shop" aria-labelledby="shop-h">
+      <div class="shop-bar">
+        <h2 id="shop-h">All products <span class="muted" data-result-count></span></h2>
+        <div class="filters" role="tablist" aria-label="Category">
+          <button role="tab" data-filter="all" aria-selected="true">All</button>
+          <button role="tab" data-filter="tops" aria-selected="false">Tops</button>
+          <button role="tab" data-filter="bottoms" aria-selected="false">Bottoms</button>
+          <button role="tab" data-filter="intimates" aria-selected="false">Intimates</button>
+        </div>
+        <label class="sort">
+          <span class="sr-only">Sort</span>
+          <select data-sort>
+            <option value="featured">Featured</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+            <option value="new">Newest</option>
+          </select>
+        </label>
+      </div>
+      <ul class="grid" data-grid></ul>
+      <p class="empty" data-empty hidden>Nothing in this shade yet. <button class="link" data-clear>Clear filters</button></p>
+    </section>
+
+    <!-- EDITORIAL split -->
+    <section class="editorial" id="journal" aria-labelledby="ed-h">
+      <div class="ed-media" aria-hidden="true">
+        <div class="ed-tile t1"><svg><use href="#g-tee"/></svg></div>
+        <div class="ed-tile t2"><svg><use href="#g-sweatpant"/></svg></div>
+      </div>
+      <div class="ed-copy">
+        <span class="eyebrow">Journal — 001</span>
+        <h2 id="ed-h">The uniform, redrawn.</h2>
+        <p>We started with the ten things we wear most and rebuilt each one: denser cotton, cleaner seams, a cut that holds its shape after the fiftieth wash. No logos on the chest, no seasonal colors to chase. Just the pieces you reach for, done properly.</p>
+        <dl class="specs">
+          <div><dt>Fabric</dt><dd>320 gsm brushed cotton fleece, 220 gsm combed jersey</dd></div>
+          <div><dt>Fit</dt><dd>Boxy through the body, tapered at the ends</dd></div>
+          <div><dt>Made</dt><dd>Cut and sewn in small runs, garment-dyed to shade</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- VALUES strip -->
+    <section class="values" aria-label="What we stand for">
+      <div><span class="num">01</span><h3>Every body</h3><p>Fifteen sizes in every style, XXS to 4X, graded on real bodies instead of scaled up from a sample.</p></div>
+      <div><span class="num">02</span><h3>Six shades</h3><p>A fixed palette that doesn't change each season. Buy a piece today and it will match what you buy next year.</p></div>
+      <div><span class="num">03</span><h3>Built to last</h3><p>Heavier fabric, double-needle seams, pre-shrunk. The same fit after a year of washing.</p></div>
+    </section>
+
+    <section class="signup" id="account" aria-labelledby="su-h">
+      <h2 id="su-h">Get first access</h2>
+      <p>New drops, restocks, and nothing else.</p>
+      <form class="signup-form" data-signup novalidate>
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
+        <button class="btn" type="submit">Join</button>
+      </form>
+      <p class="form-msg" data-signup-msg role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="foot-cols">
+      <div><h4>Shop</h4><a href="#shop">All</a><a href="#shop">Tops</a><a href="#shop">Bottoms</a><a href="#shop">Intimates</a></div>
+      <div><h4>Help</h4><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Size guide</a><a href="#">Contact</a></div>
+      <div><h4>About</h4><a href="#journal">Journal</a><a href="#">Materials</a><a href="#">Careers</a></div>
+      <div><h4>Follow</h4><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Pinterest</a></div>
+    </div>
+    <div class="foot-mark" aria-hidden="true">BAESICK</div>
+    <div class="foot-legal"><span>© <span data-year></span> BAESICK Clothing</span><span>Privacy</span><span>Terms</span></div>
+  </footer>
+
+  <!-- Quick view -->
+  <div class="overlay" data-overlay hidden></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qv-name" data-modal hidden>
+    <button class="close" aria-label="Close" data-close>Close</button>
+    <div class="qv">
+      <div class="qv-media" data-qv-media><svg><use data-qv-use href="#g-tee"/></svg></div>
+      <div class="qv-info">
+        <span class="eyebrow" data-qv-cat></span>
+        <h2 id="qv-name" data-qv-name></h2>
+        <p class="price" data-qv-price></p>
+        <p class="qv-desc" data-qv-desc></p>
+        <div class="opt">
+          <div class="opt-label">Shade — <span data-qv-shade-name></span></div>
+          <div class="swatches" data-qv-shades></div>
+        </div>
+        <div class="opt">
+          <div class="opt-label">Size <button class="link small" data-size-guide>Size guide</button></div>
+          <div class="sizes" data-qv-sizes></div>
+        </div>
+        <button class="btn block" data-qv-add disabled>Select a size</button>
+        <p class="fine">Free shipping over $100 · Free 30-day returns</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <aside class="drawer" aria-label="Shopping bag" data-drawer hidden>
+    <div class="drawer-head">
+      <h2>Bag (<span data-cart-count>0</span>)</h2>
+      <button class="close" aria-label="Close bag" data-close>Close</button>
+    </div>
+    <div class="ship-meter"><div class="bar"><span data-ship-bar></span></div><p data-ship-msg></p></div>
+    <ul class="cart-lines" data-cart-lines></ul>
+    <div class="drawer-foot">
+      <div class="row"><span>Subtotal</span><span data-subtotal>$0</span></div>
+      <button class="btn block" data-checkout>Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Search -->
+  <div class="search" role="dialog" aria-modal="true" aria-label="Search" data-search hidden>
+    <div class="search-inner">
+      <input type="search" placeholder="Search basics" aria-label="Search products" data-search-input>
+      <button class="close" data-close>Close</button>
+    </div>
+    <ul class="search-results" data-search-results></ul>
+  </div>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
