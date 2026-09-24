@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 330" role="img" aria-label="BAESICK girl silhouette">
+  <title>BAESICK girl silhouette</title>
+  <defs>
+    <clipPath id="pack"><ellipse cx="150" cy="92" rx="86" ry="32" transform="rotate(-10 150 92)"/></clipPath>
+  </defs>
+  <g fill="#000">
+    <!-- head and face profile (facing right): round forehead, button nose, pout, round chin -->
+    <path d="M150 96 Q196 96 206 126 Q211 142 208 152 Q205 160 210 166
+             Q226 170 240 182 Q250 191 238 196 Q228 198 220 197
+             Q230 199 237 203 Q242 209 228 210 L219 210 L219 220
+             Q237 221 237 227 Q235 234 218 234
+             Q207 237 213 245 Q215 257 198 259 Q184 261 172 255
+             L170 284 Q196 290 226 300 Q256 311 262 330 L38 330
+             Q44 306 76 296 Q106 288 128 282 L126 250 Q88 236 82 190 Q80 120 150 96 Z"/>
+    <!-- curly bob: curls stacked down the back of the head -->
+    <circle cx="96" cy="140" r="26"/>
+    <circle cx="80" cy="176" r="24"/>
+    <circle cx="80" cy="212" r="22"/>
+    <circle cx="94" cy="242" r="20"/>
+    <circle cx="118" cy="258" r="17"/>
+    
+    <!-- lashes past the profile edge -->
+    <path d="M205 150 Q216 134 234 128 Q222 144 212 160 Z"/>
+    <path d="M209 158 Q226 148 244 150 Q228 158 212 166 Z"/>
+    <!-- thermometer out of the lips, bulb end -->
+    <g transform="rotate(-6 220 215)">
+      <rect x="212" y="210" width="78" height="10" rx="5"/>
+      <circle cx="290" cy="215" r="8"/>
+    </g>
+    <!-- ice pack resting on the head, separated by a white gap -->
+    <ellipse cx="150" cy="92" rx="86" ry="32" transform="rotate(-10 150 92)" stroke="#fff" stroke-width="10"/>
+    <g transform="rotate(-10 150 92)">
+      <rect x="134" y="42" width="32" height="24" rx="3" stroke="#fff" stroke-width="7"/>
+      <rect x="126" y="32" width="48" height="14" rx="7" stroke="#fff" stroke-width="7"/>
+    </g>
+    <!-- polka dots: large and few so they survive stitching -->
+    <g fill="#fff" clip-path="url(#pack)">
+      <circle cx="96" cy="98" r="11"/><circle cx="128" cy="78" r="11"/><circle cx="156" cy="102" r="11"/>
+      <circle cx="188" cy="80" r="11"/><circle cx="124" cy="112" r="10"/>
+    </g>
+  </g>
+</svg>
